@@ -1,8 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { RoleService } from './role.service';
-import { CreateRoleDto } from './role.dto';
+import { CreateRoleDto } from './dtos/role.dto';
 import { Permission } from 'src/common/decorators/metadata/permission.decorator';
 
+@Permission('admin')
 @Controller('role')
 export class RoleController {
   constructor(private roleService: RoleService) {}
@@ -12,7 +13,6 @@ export class RoleController {
     return this.roleService.createRole(createRoleDto);
   }
 
-  @Permission('abc')
   @Get('/all')
   getAllRoles() {
     return this.roleService.findAll();

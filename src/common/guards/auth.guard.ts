@@ -25,6 +25,8 @@ export class AuthGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
+
+    console.log('isPublic--->', isPublic);
     if (isPublic) {
       // AuthGuard return true when the "isPublic" metadata is found
       return true;
