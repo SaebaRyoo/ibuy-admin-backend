@@ -4,8 +4,6 @@ import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from '../../../common/guards/auth.guard';
 
 const jwtModule = JwtModule.registerAsync({
   inject: [ConfigService],
@@ -17,16 +15,9 @@ const jwtModule = JwtModule.registerAsync({
     },
   }),
 });
-
-// register the authentication guard as a global guard
-const registerAuthGuardAsGlobalGuard = {
-  provide: APP_GUARD,
-  useClass: AuthGuard,
-};
-
 @Module({
   imports: [UsersModule, jwtModule],
-  providers: [AuthService, registerAuthGuardAsGlobalGuard],
+  providers: [AuthService],
   controllers: [AuthController],
   exports: [jwtModule],
 })

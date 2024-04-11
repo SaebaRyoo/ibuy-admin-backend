@@ -1,6 +1,8 @@
 import {
   CanActivate,
   ExecutionContext,
+  HttpException,
+  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -30,7 +32,10 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException();
+      throw new HttpException(
+        'You have to login first',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     try {
@@ -42,7 +47,10 @@ export class AuthGuard implements CanActivate {
       // so that we can access it in our route handlers
       request.user = payload;
     } catch {
-      throw new UnauthorizedException();
+      throw new HttpException(
+        'You have to login first',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     return true;
