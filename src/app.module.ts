@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from './api/admin/auth/auth.module';
-import { UsersModule } from './api/admin/users/users.module';
+import { AuthModule } from './mall-service/admin/auth/auth.module';
+import { UsersModule } from './mall-service/admin/users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RoleModule } from './api/admin/role/role.module';
-import { UsersRoleModule } from './api/admin/users-role/users-role.module';
+import { RoleModule } from './mall-service/admin/role/role.module';
+import { UsersRoleModule } from './mall-service/admin/users-role/users-role.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './common/guards/auth.guard';
 import { PermissionGuard } from './common/guards/permission.guard';
@@ -12,6 +12,7 @@ import {
   utilities as nestWinstonModuleUtilities,
   WinstonModule,
 } from 'nest-winston';
+import { FileModule } from './mall-service/admin/file/file.module';
 import * as winston from 'winston';
 
 @Module({
@@ -64,6 +65,7 @@ import * as winston from 'winston';
         // other transports...
       ],
     }),
+    FileModule,
   ],
   providers: [
     {

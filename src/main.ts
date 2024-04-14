@@ -9,6 +9,7 @@ import { HttpExceptionFilter } from './common/filters/http.excepition.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  await app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   // 设置统一响应体格式的拦截器
   app.useGlobalInterceptors(new TransformInterceptor());
   // 异常过滤器
@@ -19,7 +20,6 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
 
-  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   await app.listen(5001);
 }
 bootstrap();
