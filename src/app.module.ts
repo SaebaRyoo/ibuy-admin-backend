@@ -1,19 +1,24 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from './mall-service/admin/auth/auth.module';
-import { UsersModule } from './mall-service/admin/users/users.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RoleModule } from './mall-service/admin/role/role.module';
-import { UsersRoleModule } from './mall-service/admin/users-role/users-role.module';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthGuard } from './common/guards/auth.guard';
-import { PermissionGuard } from './common/guards/permission.guard';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import * as winston from 'winston';
 import {
   utilities as nestWinstonModuleUtilities,
   WinstonModule,
 } from 'nest-winston';
-import { FileModule } from './mall-service/admin/file/file.module';
-import * as winston from 'winston';
+
+import { AuthGuard } from './common/guards/auth.guard';
+import { PermissionGuard } from './common/guards/permission.guard';
+
+import { AuthModule } from './mall-service/mall-service-system/auth/auth.module';
+import { UsersModule } from './mall-service/mall-service-system/users/users.module';
+import { RoleModule } from './mall-service/mall-service-system/role/role.module';
+import { UsersRoleModule } from './mall-service/mall-service-system/users-role/users-role.module';
+import { FileModule } from './mall-service/mall-service-file/file.module';
+import { TemplateModule } from './mall-service/mall-service-goods/template/template.module';
+import { SpecModule } from './mall-service/mall-service-goods/spec/spec.module';
+import { ParaModule } from './mall-service/mall-service-goods/para/para.module';
 
 @Module({
   imports: [
@@ -66,6 +71,9 @@ import * as winston from 'winston';
       ],
     }),
     FileModule,
+    TemplateModule,
+    SpecModule,
+    ParaModule,
   ],
   providers: [
     {

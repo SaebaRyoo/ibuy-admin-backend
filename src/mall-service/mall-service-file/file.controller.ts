@@ -9,7 +9,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Response } from 'express';
 import { FileService } from './file.service';
 
 @Controller('file')
@@ -43,5 +42,10 @@ export class FileController {
       query.objectName,
       query.path,
     );
+  }
+
+  @Get('/list')
+  getDirectoryStructure() {
+    return this.fileService.getDirectoryStructure('mall');
   }
 }

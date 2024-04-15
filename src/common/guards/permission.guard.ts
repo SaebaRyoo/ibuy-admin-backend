@@ -8,8 +8,8 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { RoleService } from 'src/mall-service/admin/role/role.service';
-import { UsersRoleService } from 'src/mall-service/admin/users-role/users-role.service';
+import { RoleService } from 'src/mall-service/mall-service-system/role/role.service';
+import { UsersRoleService } from 'src/mall-service/mall-service-system/users-role/users-role.service';
 import { PERMISSION_KEY } from '../decorators/metadata/permission.decorator';
 
 @Injectable()
