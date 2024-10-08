@@ -44,11 +44,11 @@ export class SpuEntity {
   @Column({ name: 'introduction', nullable: true })
   introduction: string; // 介绍
 
-  @Column({ name: 'spec_items', nullable: true })
-  specItems: string; // 规格列表
+  @Column({ name: 'spec_items', nullable: true, type: 'json' })
+  specItems: object; // 规格列表
 
-  @Column({ name: 'para_items', nullable: true })
-  paraItems: string; // 参数列表
+  @Column({ name: 'para_items', nullable: true, type: 'json' })
+  paraItems: object; // 参数列表
 
   @Column({ name: 'sale_num', nullable: true })
   saleNum: number; // 销量

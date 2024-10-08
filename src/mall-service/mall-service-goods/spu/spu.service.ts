@@ -176,11 +176,12 @@ export class SpuService {
     const skuList = goods.skuList.map((sku) => {
       if (!sku.spec) {
         //防止空指针
-        sku.spec = '{}';
+        sku.spec = {};
       }
 
       let name = spu.name;
-      const specMap = JSON.parse(sku.spec);
+      // const specMap = JSON.parse(sku.spec);
+      const specMap = sku.spec;
 
       for (const [key, value] of Object.entries(specMap)) {
         name += ' ' + value;

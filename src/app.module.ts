@@ -24,6 +24,7 @@ import { CategoryModule } from './mall-service/mall-service-goods/category/categ
 import { CategoryBrandModule } from './mall-service/mall-service-goods/category-brand/category-brand.module';
 import { SpuModule } from './mall-service/mall-service-goods/spu/spu.module';
 import { SkuModule } from './mall-service/mall-service-goods/sku/sku.module';
+import { SearchModule } from './mall-service/mall-service-search/search.module';
 
 @Module({
   imports: [
@@ -84,6 +85,7 @@ import { SkuModule } from './mall-service/mall-service-goods/sku/sku.module';
     CategoryBrandModule,
     SpuModule,
     SkuModule,
+    SearchModule,
   ],
   providers: [
     {

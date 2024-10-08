@@ -9,7 +9,6 @@ export class SkuService {
     @InjectRepository(SkuEntity)
     private skuRepository: Repository<SkuEntity>,
   ) {}
-
   async findList(pageParma: any): Promise<[SkuEntity[], number]> {
     const qb = this.skuRepository
       .createQueryBuilder('para')

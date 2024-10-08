@@ -48,8 +48,8 @@ export class SkuEntity {
   @Column({ name: 'brand_name' })
   brandName: string; // 品牌名称
 
-  @Column()
-  spec: string; // 规格
+  @Column({ type: 'json' })
+  spec: object; // 规格
 
   @Column({ name: 'sale_num' })
   saleNum: number; // 销量
