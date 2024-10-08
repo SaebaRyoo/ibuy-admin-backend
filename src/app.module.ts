@@ -19,6 +19,11 @@ import { FileModule } from './mall-service/mall-service-file/file.module';
 import { TemplateModule } from './mall-service/mall-service-goods/template/template.module';
 import { SpecModule } from './mall-service/mall-service-goods/spec/spec.module';
 import { ParaModule } from './mall-service/mall-service-goods/para/para.module';
+import { BrandModule } from './mall-service/mall-service-goods/brand/brand.module';
+import { CategoryModule } from './mall-service/mall-service-goods/category/category.module';
+import { CategoryBrandModule } from './mall-service/mall-service-goods/category-brand/category-brand.module';
+import { SpuModule } from './mall-service/mall-service-goods/spu/spu.module';
+import { SkuModule } from './mall-service/mall-service-goods/sku/sku.module';
 
 @Module({
   imports: [
@@ -74,6 +79,11 @@ import { ParaModule } from './mall-service/mall-service-goods/para/para.module';
     TemplateModule,
     SpecModule,
     ParaModule,
+    BrandModule,
+    CategoryModule,
+    CategoryBrandModule,
+    SpuModule,
+    SkuModule,
   ],
   providers: [
     {

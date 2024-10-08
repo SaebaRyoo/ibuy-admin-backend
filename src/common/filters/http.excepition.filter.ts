@@ -34,6 +34,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       return;
     }
 
+    console.log(exception);
     response.status(status).send({
       data: null,
       status: status,

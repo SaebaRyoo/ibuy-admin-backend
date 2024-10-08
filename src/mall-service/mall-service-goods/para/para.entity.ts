@@ -12,7 +12,7 @@ export class ParaEntity {
   options: string;
 
   @Column({ nullable: true })
-  seq: number;
+  seq: number; // 排序
 
   @Column()
   template_id: number;
