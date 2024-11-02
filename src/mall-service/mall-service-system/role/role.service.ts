@@ -3,6 +3,7 @@ import { In, Repository } from 'typeorm';
 import { RoleEntity } from './entitys/role.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateRoleDto } from './dtos/role.dto';
+import Result from '../../../common/utils/Result';
 
 @Injectable()
 export class RoleService {
@@ -11,25 +12,30 @@ export class RoleService {
     private roleRepository: Repository<RoleEntity>,
   ) {}
 
-  async createRole(createRoleDto: CreateRoleDto): Promise<void> {
-    await this.roleRepository.create(createRoleDto);
+  async createRole(createRoleDto: CreateRoleDto): Promise<Result<RoleEntity>> {
+    const data: RoleEntity = await this.roleRepository.create(createRoleDto);
+    return new Result(data);
   }
 
-  findAll(): Promise<RoleEntity[]> {
-    return this.roleRepository.find();
+  async findAll(): Promise<Result<RoleEntity[]>> {
+    const data = await this.roleRepository.find();
+    return new Result(data);
   }
 
-  findOne(id: number): Promise<RoleEntity | null> {
-    return this.roleRepository.findOneBy({ id });
+  async findOne(id: number): Promise<Result<RoleEntity>> {
+    const data = await this.roleRepository.findOneBy({ id });
+    return new Result(data);
   }
 
-  findRolesByRoleIds(ids: number[]): Promise<RoleEntity[] | null> {
-    return this.roleRepository.findBy({
+  async findRolesByRoleIds(ids: number[]): Promise<Result<RoleEntity[]>> {
+    const data = await this.roleRepository.findBy({
       id: In(ids),
     });
+    return new Result(data);
   }
 
-  async remove(id: number): Promise<void> {
-    await this.roleRepository.delete(id);
+  async remove(id: number) {
+    const data = await this.roleRepository.delete(id);
+    return new Result(data, '删除成功');
   }
 }

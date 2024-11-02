@@ -25,6 +25,9 @@ import { CategoryBrandModule } from './mall-service/mall-service-goods/category-
 import { SpuModule } from './mall-service/mall-service-goods/spu/spu.module';
 import { SkuModule } from './mall-service/mall-service-goods/sku/sku.module';
 import { SearchModule } from './mall-service/mall-service-search/search.module';
+import { OrderModule } from './mall-service/mall-service-order/order/order.module';
+import { OrderItemsModule } from './mall-service/mall-service-order/order-items/order-items.module';
+import { RedisModule } from '@nestjs-modules/ioredis';
 
 @Module({
   imports: [
@@ -55,6 +58,21 @@ import { SearchModule } from './mall-service/mall-service-search/search.module';
         };
       },
     }),
+    RedisModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          type: 'single',
+          url: 'redis://localhost:6379',
+          options: {
+            // username: configService.get('POSTGRES_PASSWORD'),
+            // password: configService.get('POSTGRES_PASSWORD'),
+            db: 0,
+          },
+        };
+      },
+    }),
     WinstonModule.forRoot({
       // options
       transports: [
@@ -77,6 +95,7 @@ import { SearchModule } from './mall-service/mall-service-search/search.module';
       ],
     }),
     FileModule,
+    // 商品相关模块
     TemplateModule,
     SpecModule,
     ParaModule,
@@ -85,7 +104,11 @@ import { SearchModule } from './mall-service/mall-service-search/search.module';
     CategoryBrandModule,
     SpuModule,
     SkuModule,
+    // 搜索
     SearchModule,
+    // 订单管理相关模块
+    OrderModule,
+    OrderItemsModule,
   ],
   providers: [
     {

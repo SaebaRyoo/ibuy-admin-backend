@@ -10,30 +10,31 @@ import {
 } from '@nestjs/common';
 import { SkuService } from './sku.service';
 import { SkuEntity } from './sku.entity';
+import { Public } from '../../../common/decorators/metadata/public.decorator';
 
 @Controller('sku')
 export class SkuController {
   @Inject(SkuService)
   private skuService: SkuService;
 
+  @Public()
   @Post('/list')
   async findList(@Body('pageParam') pageParam: any) {
-    const [data, total] = await this.skuService.findList(pageParam);
-    return { data, total };
+    return await this.skuService.findList(pageParam);
   }
 
   @Post('/add')
-  createPara(@Body() body: any) {
-    return this.skuService.addPara(body);
+  createSku(@Body() body: any) {
+    return this.skuService.addSku(body);
   }
 
   @Get('/:id')
-  async getParaById(@Param('id') id: string) {
+  async getSkuById(@Param('id') id: string) {
     return this.skuService.findById(id);
   }
 
   @Patch('/:id')
-  updatePara(@Param('id') id: number, @Body() para: SkuEntity) {
-    return this.skuService.updatePara(id, para);
+  updateSku(@Param('id') id: string, @Body() sku: SkuEntity) {
+    return this.skuService.updateSku(id, sku);
   }
 }

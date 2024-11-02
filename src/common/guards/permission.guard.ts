@@ -29,13 +29,15 @@ export class PermissionGuard implements CanActivate {
       return true;
     }
 
-    const roleIds = await this.usersRoleService.findRolesIdByUserId(
+    const roleIdsResult = await this.usersRoleService.findRolesIdByUserId(
       request.user.user_id,
     );
 
-    const roles = await this.roleService.findRolesByRoleIds(roleIds);
+    const roleResult = await this.roleService.findRolesByRoleIds(
+      roleIdsResult.data,
+    );
 
-    const roleNames = roles?.map((role) => role.name);
+    const roleNames = roleResult.data?.map((role) => role.name);
 
     console.log('roleNames--->', roleNames);
 

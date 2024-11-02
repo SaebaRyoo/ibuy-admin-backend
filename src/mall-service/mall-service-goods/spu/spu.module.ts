@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { SpuService } from './spu.service';
 import { SpuController } from './spu.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,6 +7,7 @@ import { CategoryEntity } from '../category/category.entity';
 import { SkuEntity } from '../sku/sku.entity';
 import { BrandEntity } from '../brand/brand.entity';
 
+@Global()
 @Module({
   imports: [
     TypeOrmModule.forFeature([
