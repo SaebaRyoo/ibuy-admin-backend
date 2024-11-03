@@ -28,6 +28,11 @@ import { SearchModule } from './mall-service/mall-service-search/search.module';
 import { OrderModule } from './mall-service/mall-service-order/order/order.module';
 import { OrderItemsModule } from './mall-service/mall-service-order/order-items/order-items.module';
 import { RedisModule } from '@nestjs-modules/ioredis';
+import { MemberModule } from './mall-service/mall-service-member/member/member.module';
+import { ProvinceModule } from './mall-service/mall-service-member/province/province.module';
+import { CityModule } from './mall-service/mall-service-member/city/city.module';
+import { AreaModule } from './mall-service/mall-service-member/area/area.module';
+import { AddressModule } from './mall-service/mall-service-member/address/address.module';
 
 @Module({
   imports: [
@@ -109,6 +114,12 @@ import { RedisModule } from '@nestjs-modules/ioredis';
     // 订单管理相关模块
     OrderModule,
     OrderItemsModule,
+    //   会员相关
+    MemberModule,
+    ProvinceModule,
+    CityModule,
+    AreaModule,
+    AddressModule,
   ],
   providers: [
     {

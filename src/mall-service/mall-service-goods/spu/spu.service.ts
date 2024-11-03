@@ -168,7 +168,7 @@ export class SpuService {
       // await this.skuRepository
       //   .createQueryBuilder()
       //   .delete()
-      //   .from(SkuEntity)
+      //   .from(AddressEntity)
       //   .where('spuId = :spuId', { spuId: spu.id })
       //   .execute();
       await this.skuRepository.delete({ spuId: spu.id });

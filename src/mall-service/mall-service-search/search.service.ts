@@ -18,7 +18,7 @@ export class SearchService {
 
   constructor(
     private readonly elasticsearchService: ElasticsearchService,
-    private readonly skuService: SkuService, // 注入 SkuService
+    private readonly skuService: SkuService, // 注入 AddressService
   ) {}
 
   // 关键词搜索
