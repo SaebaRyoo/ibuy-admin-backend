@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { ParaEntity } from './para.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import Result from '../../../common/utils/Result';
+import findWithConditions from '../../../common/utils/findWithConditions';
 
 @Injectable()
 export class ParaService {
@@ -11,12 +12,13 @@ export class ParaService {
     private paraRepository: Repository<ParaEntity>,
   ) {}
 
-  async findList(pageParma: any) {
-    const qb = this.paraRepository
-      .createQueryBuilder('para')
-      .skip(pageParma.pageSize * (pageParma.current - 1))
-      .limit(pageParma.pageSize);
-    const [data, total] = await qb.getManyAndCount();
+  async findList(pageParma: any, conditions) {
+    const [data, total] = await findWithConditions(
+      this.paraRepository,
+      conditions,
+      pageParma,
+      'para',
+    );
     return new Result({ data, total });
   }
 
@@ -25,12 +27,12 @@ export class ParaService {
     return new Result(data);
   }
 
-  async addPara(para: ParaEntity) {
+  async add(para: ParaEntity) {
     const data = await this.paraRepository.insert(para);
     return new Result(data);
   }
 
-  async updatePara(id: number, para: ParaEntity) {
+  async update(id: number, para: ParaEntity) {
     const data = await this.paraRepository
       .createQueryBuilder()
       .update(ParaEntity)

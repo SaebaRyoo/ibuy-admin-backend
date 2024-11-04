@@ -20,7 +20,7 @@ export class CityController {
    * @param pageParam
    * @param member
    */
-  @Post('/list')
+  @Post('/list/:current/:pageSize')
   async findList(
     @Body('pageParam') pageParam: any,
     @Body('conditions') member: CityEntity,

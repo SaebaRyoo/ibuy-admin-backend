@@ -57,14 +57,18 @@ export class SpuController {
     return this.spuService.saveGoods(goods);
   }
 
-  @Post('/list')
-  async findList(@Body('pageParam') pageParam: any) {
-    return this.spuService.findList(pageParam);
+  @Post('/list/:current/:pageSize')
+  async findList(
+    @Param('current') current: number,
+    @Param('pageSize') pageSize: number,
+    @Body() spu: SpuEntity,
+  ) {
+    return this.spuService.findList({ current, pageSize }, spu);
   }
 
   @Post('/add')
-  createPara(@Body() body: any) {
-    return this.spuService.addPara(body);
+  create(@Body() body: any) {
+    return this.spuService.add(body);
   }
 
   @Get('/:id')
@@ -73,7 +77,7 @@ export class SpuController {
   }
 
   @Patch('/:id')
-  updatePara(@Param('id') id: number, @Body() para: SpuEntity) {
-    return this.spuService.updatePara(id, para);
+  update(@Param('id') id: number, @Body() para: SpuEntity) {
+    return this.spuService.update(id, para);
   }
 }

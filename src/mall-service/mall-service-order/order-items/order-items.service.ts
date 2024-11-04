@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrderItemsEntity } from './entities/order-items.entity';
 import Result from '../../../common/utils/Result';
+import findWithConditions from '../../../common/utils/findWithConditions';
 
 @Injectable()
 export class OrderItemsService {
@@ -10,12 +11,13 @@ export class OrderItemsService {
     @InjectRepository(OrderItemsEntity)
     private orderItemsRepository: Repository<OrderItemsEntity>,
   ) {}
-  async findList(pageParma: any) {
-    const qb = this.orderItemsRepository
-      .createQueryBuilder('order-item')
-      .skip(pageParma.pageSize * (pageParma.current - 1))
-      .limit(pageParma.pageSize);
-    const [data, total] = await qb.getManyAndCount();
+  async findList(pageParma: any, conditions) {
+    const [data, total] = await findWithConditions(
+      this.orderItemsRepository,
+      conditions,
+      pageParma,
+      'orderItem',
+    );
     return new Result({ data, total });
   }
 

@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { CategoryEntity } from './category.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import Result from '../../../common/utils/Result';
+import findWithConditions from '../../../common/utils/findWithConditions';
 
 @Injectable()
 export class CategoryService {
@@ -13,12 +14,14 @@ export class CategoryService {
 
   async findList(
     pageParma: any,
+    conditions,
   ): Promise<Result<{ data: CategoryEntity[]; total: number }>> {
-    const qb = this.categoryRepository
-      .createQueryBuilder('para')
-      .skip(pageParma.pageSize * (pageParma.current - 1))
-      .limit(pageParma.pageSize);
-    const [data, total] = await qb.getManyAndCount();
+    const [data, total] = await findWithConditions(
+      this.categoryRepository,
+      conditions,
+      pageParma,
+      'category',
+    );
     return new Result({ data, total });
   }
 
@@ -27,12 +30,12 @@ export class CategoryService {
     return new Result(data);
   }
 
-  async addPara(para: CategoryEntity) {
+  async add(para: CategoryEntity) {
     const data = await this.categoryRepository.insert(para);
     return new Result(data);
   }
 
-  async updatePara(id: number, para: CategoryEntity) {
+  async update(id: number, para: CategoryEntity) {
     const data = await this.categoryRepository
       .createQueryBuilder()
       .update(CategoryEntity)

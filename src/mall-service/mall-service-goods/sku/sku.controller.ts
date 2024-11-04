@@ -11,6 +11,7 @@ import {
 import { SkuService } from './sku.service';
 import { SkuEntity } from './sku.entity';
 import { Public } from '../../../common/decorators/metadata/public.decorator';
+import { AddressEntity } from '../../mall-service-member/address/address.entity';
 
 @Controller('sku')
 export class SkuController {
@@ -18,9 +19,13 @@ export class SkuController {
   private skuService: SkuService;
 
   @Public()
-  @Post('/list')
-  async findList(@Body('pageParam') pageParam: any) {
-    return await this.skuService.findList(pageParam);
+  @Post('/list/:current/:pageSize')
+  async findList(
+    @Param('current') current: number,
+    @Param('pageSize') pageSize: number,
+    @Body() sku: SkuEntity,
+  ) {
+    return await this.skuService.findList({ current, pageSize }, sku);
   }
 
   @Post('/add')

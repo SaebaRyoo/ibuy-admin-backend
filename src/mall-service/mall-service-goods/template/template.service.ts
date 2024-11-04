@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { TemplateEntity } from './template.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import Result from '../../../common/utils/Result';
+import findWithConditions from '../../../common/utils/findWithConditions';
 
 @Injectable()
 export class TemplateService {
@@ -11,13 +12,13 @@ export class TemplateService {
     private templateRepository: Repository<TemplateEntity>,
   ) {}
 
-  async findList(pageParma: any) {
-    const qb = this.templateRepository
-      .createQueryBuilder('template')
-      .skip(pageParma.pageSize * (pageParma.current - 1))
-      .limit(pageParma.pageSize);
-    // console.log(qb);
-    const [data, total] = await qb.getManyAndCount();
+  async findList(pageParma: any, conditions) {
+    const [data, total] = await findWithConditions(
+      this.templateRepository,
+      conditions,
+      pageParma,
+      'template',
+    );
     return new Result({ data, total });
   }
 

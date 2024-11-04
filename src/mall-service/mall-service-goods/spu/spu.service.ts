@@ -8,6 +8,7 @@ import { SkuEntity } from '../sku/sku.entity';
 import { CategoryEntity } from '../category/category.entity';
 import { BrandEntity } from '../brand/brand.entity';
 import Result from '../../../common/utils/Result';
+import findWithConditions from '../../../common/utils/findWithConditions';
 
 @Injectable()
 export class SpuService {
@@ -210,12 +211,13 @@ export class SpuService {
     return new Result(data);
   }
 
-  async findList(pageParma: any) {
-    const qb = this.spuRepository
-      .createQueryBuilder('spu')
-      .skip(pageParma.pageSize * (pageParma.current - 1))
-      .limit(pageParma.pageSize);
-    const [data, total] = await qb.getManyAndCount();
+  async findList(pageParma: any, conditions: SpuEntity) {
+    const [data, total] = await findWithConditions(
+      this.spuRepository,
+      conditions,
+      pageParma,
+      'spu',
+    );
     return new Result({ data, total });
   }
 
@@ -224,12 +226,12 @@ export class SpuService {
     return new Result(data);
   }
 
-  async addPara(spu: SpuEntity) {
+  async add(spu: SpuEntity) {
     const data = await this.spuRepository.insert(spu);
     return new Result(data);
   }
 
-  async updatePara(id: number, spu: SpuEntity) {
+  async update(id: number, spu: SpuEntity) {
     const data = await this.spuRepository
       .createQueryBuilder()
       .update(SpuEntity)

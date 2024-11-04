@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { SpecEntity } from './spec.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import Result from '../../../common/utils/Result';
+import findWithConditions from '../../../common/utils/findWithConditions';
 
 @Injectable()
 export class SpecService {
@@ -11,12 +12,13 @@ export class SpecService {
     private specRepository: Repository<SpecEntity>,
   ) {}
 
-  async findList(pageParma: any) {
-    const qb = this.specRepository
-      .createQueryBuilder('spec')
-      .skip(pageParma.pageSize * (pageParma.current - 1))
-      .limit(pageParma.pageSize);
-    const [data, total] = await qb.getManyAndCount();
+  async findList(pageParma: any, conditions) {
+    const [data, total] = await findWithConditions(
+      this.specRepository,
+      conditions,
+      pageParma,
+      'spec',
+    );
     return new Result({ data, total });
   }
 

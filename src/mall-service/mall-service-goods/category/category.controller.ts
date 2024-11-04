@@ -10,20 +10,25 @@ import {
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CategoryEntity } from './category.entity';
+import { AddressEntity } from '../../mall-service-member/address/address.entity';
 
 @Controller('category')
 export class CategoryController {
   @Inject(CategoryService)
   private categoryService: CategoryService;
 
-  @Post('/list')
-  async findList(@Body('pageParam') pageParam: any) {
-    return this.categoryService.findList(pageParam);
+  @Post('/list/:current/:pageSize')
+  async findList(
+    @Param('current') current: number,
+    @Param('pageSize') pageSize: number,
+    @Body() category: CategoryEntity,
+  ) {
+    return this.categoryService.findList({ current, pageSize }, category);
   }
 
   @Post('/add')
-  createPara(@Body() body: any) {
-    return this.categoryService.addPara(body);
+  create(@Body() body: any) {
+    return this.categoryService.add(body);
   }
 
   @Get('/:id')
@@ -32,7 +37,7 @@ export class CategoryController {
   }
 
   @Patch('/:id')
-  updatePara(@Param('id') id: number, @Body() para: CategoryEntity) {
-    return this.categoryService.updatePara(id, para);
+  update(@Param('id') id: number, @Body() para: CategoryEntity) {
+    return this.categoryService.update(id, para);
   }
 }

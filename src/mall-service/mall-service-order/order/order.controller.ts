@@ -11,15 +11,20 @@ import {
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { OrderEntity } from './entities/order.entity';
+import { BrandEntity } from '../../mall-service-goods/brand/brand.entity';
 
 @Controller('order')
 export class OrderController {
   @Inject(OrderService)
   private orderService: OrderService;
 
-  @Post('/list')
-  async findList(@Body('pageParam') pageParam: any) {
-    return this.orderService.findList(pageParam);
+  @Post('/list/:current/:pageSize')
+  async findList(
+    @Param('current') current: number,
+    @Param('pageSize') pageSize: number,
+    @Body() order: OrderEntity,
+  ) {
+    return this.orderService.findList({ current, pageSize }, order);
   }
   @Get('/:id')
   async getSpecById(@Param('id') id: string) {

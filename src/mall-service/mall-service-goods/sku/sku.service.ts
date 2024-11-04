@@ -6,6 +6,7 @@ import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
 import { OrderItemsEntity } from '../../mall-service-order/order-items/entities/order-items.entity';
 import Result from '../../../common/utils/Result';
+import findWithConditions from '../../../common/utils/findWithConditions';
 
 @Injectable()
 export class SkuService {
@@ -18,13 +19,20 @@ export class SkuService {
   ) {}
   async findList(
     pageParma: any,
+    conditions,
   ): Promise<Result<{ data: SkuEntity[]; total: number }>> {
-    const qb = this.skuRepository
-      .createQueryBuilder('sku')
-      .skip(pageParma.pageSize * (pageParma.current - 1))
-      .limit(pageParma.pageSize);
-    const [data, total] = await qb.getManyAndCount();
+    const [data, total] = await findWithConditions(
+      this.skuRepository,
+      conditions,
+      pageParma,
+      'sku',
+    );
     return new Result({ data, total });
+  }
+
+  async findAll() {
+    const data = await this.skuRepository.find();
+    return new Result(data);
   }
 
   async findById(id: string) {

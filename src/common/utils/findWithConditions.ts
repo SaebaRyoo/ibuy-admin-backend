@@ -5,6 +5,13 @@ export interface PageParam {
   current: number;
 }
 
+/**
+ * 构建查询条件
+ * @param repository
+ * @param conditions
+ * @param pageParam
+ * @param alias
+ */
 export default async function findWithConditions<T>(
   repository: Repository<T>,
   conditions: Partial<T>,
@@ -29,13 +36,17 @@ export default async function findWithConditions<T>(
   if (conditionKeys.length === 0) {
     return qb.getManyAndCount();
   }
+  const propExist = filterValidPropertyNames(repository, conditionKeys); //判断是否为当前实体中的内容
 
   // 遍历条件对象的 key-value，根据条件动态添加查询条件
-  conditionKeys.forEach((key) => {
+  propExist.forEach((key) => {
     const value = conditions[key];
+    const snakeKey = camelToSnake(key);
+
+    // 过滤掉空值
     if (value !== undefined && value !== null) {
-      // 过滤掉空值
-      qb.andWhere(`${camelToSnake(key)} = :value`, { value });
+      // 模糊匹配
+      qb.andWhere(`${snakeKey} LIKE :value`, { value: `%${value}%` });
     }
   });
 
@@ -55,4 +66,26 @@ export default async function findWithConditions<T>(
  */
 function camelToSnake(camelCase: string): string {
   return camelCase.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+}
+
+/**
+ * 过滤出合法的属性名
+ * @param repository
+ * @param propertyNames
+ */
+function filterValidPropertyNames<TEntity>(
+  repository: Repository<TEntity>,
+  propertyNames: string[],
+): string[] {
+  const metadata = repository.manager.connection.getMetadata(repository.target);
+
+  // 获取实体中所有的属性名
+  const entityPropertyNames = metadata.columns.map(
+    (column) => column.propertyName,
+  );
+
+  // 过滤出在实体中存在的属性名
+  return propertyNames.filter((propertyName) =>
+    entityPropertyNames.includes(propertyName),
+  );
 }

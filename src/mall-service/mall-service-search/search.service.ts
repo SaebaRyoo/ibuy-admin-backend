@@ -254,12 +254,8 @@ export class SearchService {
 
   async importSku(): Promise<void> {
     // 从 sku 服务获取 SKU 列表
-    const result = await this.skuService.findList({
-      current: 1,
-      pageSize: 99999,
-    });
-    const skuInfos = result.data.data;
-    const total = result.data.total;
+    const result = await this.skuService.findAll();
+    const skuInfos = result.data;
     // 构建 Bulk 请求  将每个 SKU 信息的索引操作和文档内容展平为一个单一的数组
     const body = skuInfos.flatMap((skuInfo) => {
       return [

@@ -16,14 +16,18 @@ export class ParaController {
   @Inject(ParaService)
   private paraService: ParaService;
 
-  @Post('/list')
-  async findList(@Body('pageParam') pageParam: any) {
-    return await this.paraService.findList(pageParam);
+  @Post('/list/:current/:pageSize')
+  async findList(
+    @Param('current') current: number,
+    @Param('pageSize') pageSize: number,
+    @Body() para: ParaEntity,
+  ) {
+    return await this.paraService.findList({ current, pageSize }, para);
   }
 
   @Post('/add')
-  createPara(@Body() body: any) {
-    return this.paraService.addPara(body);
+  create(@Body() body: any) {
+    return this.paraService.add(body);
   }
 
   @Get('/:id')
@@ -32,7 +36,7 @@ export class ParaController {
   }
 
   @Patch('/:id')
-  updatePara(@Param('id') id: number, @Body() para: ParaEntity) {
-    return this.paraService.updatePara(id, para);
+  update(@Param('id') id: number, @Body() para: ParaEntity) {
+    return this.paraService.update(id, para);
   }
 }

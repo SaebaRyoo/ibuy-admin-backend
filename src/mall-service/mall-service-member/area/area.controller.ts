@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { AreaService } from './area.service';
 import { AreaEntity } from './area.entity';
+import { SpuEntity } from '../../mall-service-goods/spu/spu.entity';
 
 @Controller('area')
 export class AreaController {
@@ -17,15 +18,17 @@ export class AreaController {
 
   /**
    * 分页+条件查找
-   * @param pageParam
-   * @param member
+   * @param current
+   * @param pageSize
+   * @param area
    */
-  @Post('/list')
+  @Post('/list/:current/:pageSize')
   async findList(
-    @Body('pageParam') pageParam: any,
-    @Body('conditions') member: AreaEntity,
+    @Param('current') current: number,
+    @Param('pageSize') pageSize: number,
+    @Body() area: AreaEntity,
   ) {
-    return await this.areaService.findList(pageParam, member);
+    return await this.areaService.findList({ current, pageSize }, area);
   }
 
   /**

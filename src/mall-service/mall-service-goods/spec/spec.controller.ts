@@ -10,15 +10,20 @@ import {
 } from '@nestjs/common';
 import { SpecService } from './spec.service';
 import { SpecEntity } from './spec.entity';
+import { AddressEntity } from '../../mall-service-member/address/address.entity';
 
 @Controller('spec')
 export class SpecController {
   @Inject(SpecService)
   private specService: SpecService;
 
-  @Post('/list')
-  async findList(@Body('pageParam') pageParam: any) {
-    return this.specService.findList(pageParam);
+  @Post('/list/:current/:pageSize')
+  async findList(
+    @Param('current') current: number,
+    @Param('pageSize') pageSize: number,
+    @Body() spec: SpecEntity,
+  ) {
+    return this.specService.findList({ current, pageSize }, spec);
   }
 
   @Post('/add')

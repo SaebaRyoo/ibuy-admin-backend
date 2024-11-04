@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { ProvinceService } from './province.service';
 import { ProvinceEntity } from './province.entity';
+import { SpuEntity } from '../../mall-service-goods/spu/spu.entity';
 
 @Controller('province')
 export class ProvinceController {
@@ -17,15 +18,17 @@ export class ProvinceController {
 
   /**
    * 分页查找省份列表
-   * @param pageParam
-   * @param member
+   * @param current
+   * @param pageSize
+   * @param province
    */
-  @Post('/list')
+  @Post('/list/:current/:pageSize')
   async findList(
-    @Body('pageParam') pageParam: any,
-    @Body('conditions') member: ProvinceEntity,
+    @Param('current') current: number,
+    @Param('pageSize') pageSize: number,
+    @Body() province: ProvinceEntity,
   ) {
-    return await this.provinceService.findList(pageParam, member);
+    return await this.provinceService.findList({ current, pageSize }, province);
   }
 
   /**

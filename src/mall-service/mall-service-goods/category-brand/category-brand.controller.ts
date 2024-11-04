@@ -10,15 +10,23 @@ import {
 } from '@nestjs/common';
 import { CategoryBrandService } from './category-brand.service';
 import { CategoryBrandEntity } from './category-brand.entity';
+import { AddressEntity } from '../../mall-service-member/address/address.entity';
 
 @Controller('categoryBrand')
 export class CategoryBrandController {
   @Inject(CategoryBrandService)
   private categoryBrandService: CategoryBrandService;
 
-  @Post('/list')
-  async findList(@Body('pageParam') pageParam: any) {
-    return this.categoryBrandService.findList(pageParam);
+  @Post('/list/:current/:pageSize')
+  async findList(
+    @Param('current') current: number,
+    @Param('pageSize') pageSize: number,
+    @Body() categoryBrand: CategoryBrandEntity,
+  ) {
+    return this.categoryBrandService.findList(
+      { current, pageSize },
+      categoryBrand,
+    );
   }
 
   @Post('/add')

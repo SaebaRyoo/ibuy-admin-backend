@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { MemberEntity } from './member.entity';
+import { SpuEntity } from '../../mall-service-goods/spu/spu.entity';
 
 @Controller('member')
 export class MemberController {
@@ -17,15 +18,17 @@ export class MemberController {
 
   /**
    * 分页查找会员列表
-   * @param pageParam
+   * @param current
+   * @param pageSize
    * @param member
    */
-  @Post('/list')
+  @Post('/list/:current/:pageSize')
   async findList(
-    @Body('pageParam') pageParam: any,
-    @Body('conditions') member: MemberEntity,
+    @Param('current') current: number,
+    @Param('pageSize') pageSize: number,
+    @Body() member: MemberEntity,
   ) {
-    return await this.memberService.findList(pageParam, member);
+    return await this.memberService.findList({ current, pageSize }, member);
   }
 
   /**

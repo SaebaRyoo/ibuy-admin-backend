@@ -4,6 +4,7 @@ import { BrandEntity } from './brand.entity';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { CategoryBrandEntity } from '../category-brand/category-brand.entity';
 import Result from '../../../common/utils/Result';
+import findWithConditions from '../../../common/utils/findWithConditions';
 
 @Injectable()
 export class BrandService {
@@ -36,12 +37,13 @@ export class BrandService {
     return new Result({ data, total });
   }
 
-  async findList(pageParma: any) {
-    const qb = this.brandRepository
-      .createQueryBuilder('para')
-      .skip(pageParma.pageSize * (pageParma.current - 1))
-      .limit(pageParma.pageSize);
-    const [data, total] = await qb.getManyAndCount();
+  async findList(pageParma: any, conditions) {
+    const [data, total] = await findWithConditions(
+      this.brandRepository,
+      conditions,
+      pageParma,
+      'brand',
+    );
     return new Result({ data, total });
   }
 
@@ -50,12 +52,12 @@ export class BrandService {
     return new Result(data);
   }
 
-  async addPara(para: BrandEntity) {
+  async add(para: BrandEntity) {
     const data = await this.brandRepository.insert(para);
     return new Result(data);
   }
 
-  async updatePara(id: number, para: BrandEntity) {
+  async update(id: number, para: BrandEntity) {
     const data = await this.brandRepository
       .createQueryBuilder()
       .update(BrandEntity)

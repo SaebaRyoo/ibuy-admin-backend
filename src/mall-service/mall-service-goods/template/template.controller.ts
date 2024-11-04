@@ -10,15 +10,20 @@ import {
 } from '@nestjs/common';
 import { TemplateService } from './template.service';
 import { TemplateEntity } from './template.entity';
+import { AddressEntity } from '../../mall-service-member/address/address.entity';
 
 @Controller('template')
 export class TemplateController {
   @Inject(TemplateService)
   private templateService: TemplateService;
 
-  @Post('/list')
-  async findList(@Body('pageParam') pageParam: any) {
-    return this.templateService.findList(pageParam);
+  @Post('/list/:current/:pageSize')
+  async findList(
+    @Param('current') current: number,
+    @Param('pageSize') pageSize: number,
+    @Body() template: TemplateEntity,
+  ) {
+    return this.templateService.findList({ current, pageSize }, template);
   }
 
   @Post('/add')

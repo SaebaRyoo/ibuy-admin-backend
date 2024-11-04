@@ -7,6 +7,7 @@ import { OrderItemsService } from '../order-items/order-items.service';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import Redis from 'ioredis';
 import Result from '../../../common/utils/Result';
+import findWithConditions from '../../../common/utils/findWithConditions';
 
 @Injectable()
 export class OrderService {
@@ -22,12 +23,14 @@ export class OrderService {
   ) {}
   async findList(
     pageParma: any,
+    conditions,
   ): Promise<Result<{ data: OrderEntity[]; total: number }>> {
-    const qb = this.orderRepository
-      .createQueryBuilder('order')
-      .skip(pageParma.pageSize * (pageParma.current - 1))
-      .limit(pageParma.pageSize);
-    const [data, total] = await qb.getManyAndCount();
+    const [data, total] = await findWithConditions(
+      this.orderRepository,
+      conditions,
+      pageParma,
+      'order',
+    );
     return new Result({ data, total });
   }
 

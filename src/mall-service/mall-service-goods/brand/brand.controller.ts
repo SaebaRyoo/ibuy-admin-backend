@@ -21,14 +21,18 @@ export class BrandController {
     return this.brandService.findBrandByCategoryId(category_id);
   }
 
-  @Post('/list')
-  async findList(@Body('pageParam') pageParam: any) {
-    return this.brandService.findList(pageParam);
+  @Post('/list/:current/:pageSize')
+  async findList(
+    @Param('current') current: number,
+    @Param('pageSize') pageSize: number,
+    @Body() brand: BrandEntity,
+  ) {
+    return this.brandService.findList({ current, pageSize }, brand);
   }
 
   @Post('/add')
-  createPara(@Body() body: any) {
-    return this.brandService.addPara(body);
+  create(@Body() body: any) {
+    return this.brandService.add(body);
   }
 
   @Get('/:id')
@@ -37,7 +41,7 @@ export class BrandController {
   }
 
   @Patch('/:id')
-  updatePara(@Param('id') id: number, @Body() para: BrandEntity) {
-    return this.brandService.updatePara(id, para);
+  update(@Param('id') id: number, @Body() para: BrandEntity) {
+    return this.brandService.update(id, para);
   }
 }
