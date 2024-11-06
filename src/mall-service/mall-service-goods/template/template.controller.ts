@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -39,5 +40,15 @@ export class TemplateController {
   @Patch('/:id')
   updateTemplate(@Param('id') id: number, @Body() template: TemplateEntity) {
     return this.templateService.updateTemplate(id, template);
+  }
+
+  @Delete('/:id')
+  async remove(@Param('id') id: number) {
+    return this.templateService.remove(id);
+  }
+
+  @Get()
+  async findAll() {
+    return this.templateService.findAll();
   }
 }

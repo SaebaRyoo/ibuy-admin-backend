@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Get, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CategoryBrandEntity } from './category-brand.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -45,5 +45,10 @@ export class CategoryBrandService {
   async remove(id: number) {
     await this.categoryBrandRepository.delete(id);
     return new Result(null);
+  }
+
+  @Get()
+  async findAll() {
+    return this.categoryBrandRepository.find();
   }
 }

@@ -35,4 +35,14 @@ export class OrderController {
   update(@Param('id') id: number, @Body() spec: OrderEntity) {
     return this.orderService.update(id, spec);
   }
+
+  @Delete('/:id')
+  async remove(@Param('id') id: number) {
+    return this.orderService.remove(id);
+  }
+
+  @Get()
+  async findAll() {
+    return this.orderService.findAll();
+  }
 }

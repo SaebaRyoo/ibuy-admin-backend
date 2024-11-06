@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Get, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrderEntity } from './entities/order.entity';
@@ -49,5 +49,10 @@ export class OrderService {
 
   async remove(id: number): Promise<void> {
     await this.orderRepository.delete(id);
+  }
+
+  @Get()
+  async findAll() {
+    return this.orderRepository.find();
   }
 }

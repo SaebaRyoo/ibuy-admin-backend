@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -41,5 +42,15 @@ export class SkuController {
   @Patch('/:id')
   updateSku(@Param('id') id: string, @Body() sku: SkuEntity) {
     return this.skuService.updateSku(id, sku);
+  }
+
+  @Delete('/:id')
+  async remove(@Param('id') id: number) {
+    return this.skuService.remove(id);
+  }
+
+  @Get()
+  async findAll() {
+    return this.skuService.findAll();
   }
 }

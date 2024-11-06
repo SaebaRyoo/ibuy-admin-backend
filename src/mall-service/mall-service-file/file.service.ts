@@ -39,13 +39,38 @@ export class FileService {
     });
   }
 
-  async downloadFile(
+  async readFileStream(
     bucketName: string,
     objectName: string,
     path: string = '/',
   ): Promise<Result<any>> {
-    await this.minioClient.getObject(bucketName, `${path}/${objectName}`);
-    return new Result(null, '下载成功');
+    try {
+      // 获取 Minio 文件的可读流
+      const fileStream = await this.minioClient.getObject(
+        bucketName,
+        `${path}/${objectName}`,
+      );
+
+      // 返回一个 Promise，读取流的内容到 Buffer 中
+      const data = await new Promise<Buffer>((resolve, reject) => {
+        const buffers: Buffer[] = [];
+        fileStream.on('data', (chunk) => {
+          buffers.push(chunk); // 收集数据块
+        });
+
+        fileStream.on('error', (err) => {
+          reject(err); // 错误处理
+        });
+
+        fileStream.on('end', () => {
+          resolve(Buffer.concat(buffers)); // 合并数据块并返回
+        });
+      });
+
+      return new Result(data);
+    } catch (error) {
+      return new Result(null, '文件读取失败');
+    }
   }
 
   async deleteFile(

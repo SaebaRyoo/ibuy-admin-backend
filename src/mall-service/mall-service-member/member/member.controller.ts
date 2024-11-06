@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -57,5 +58,15 @@ export class MemberController {
   @Patch('/:id')
   update(@Param('id') id: string, @Body() member: MemberEntity) {
     return this.memberService.update(id, member);
+  }
+
+  @Delete('/:id')
+  async remove(@Param('id') id: number) {
+    return this.memberService.remove(id);
+  }
+
+  @Get()
+  async findAll() {
+    return this.memberService.findAll();
   }
 }

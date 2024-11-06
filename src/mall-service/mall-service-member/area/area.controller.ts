@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -57,5 +58,15 @@ export class AreaController {
   @Patch('/:id')
   update(@Param('id') id: string, @Body() member: AreaEntity) {
     return this.areaService.update(id, member);
+  }
+
+  @Delete('/:id')
+  async remove(@Param('id') id: number) {
+    return this.areaService.remove(id);
+  }
+
+  @Get()
+  async findAll() {
+    return this.areaService.findAll();
   }
 }

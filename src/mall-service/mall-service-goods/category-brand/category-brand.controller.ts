@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -45,5 +46,14 @@ export class CategoryBrandController {
     @Body() template: CategoryBrandEntity,
   ) {
     return this.categoryBrandService.updateTemplate(id, template);
+  }
+  @Delete('/:id')
+  async remove(@Param('id') id: number) {
+    return this.categoryBrandService.remove(id);
+  }
+
+  @Get()
+  async findAll() {
+    return this.categoryBrandService.findAll();
   }
 }

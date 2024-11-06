@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Get, Injectable } from '@nestjs/common';
 import { Repository, DataSource } from 'typeorm';
 import { BrandEntity } from './brand.entity';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
@@ -27,7 +27,7 @@ export class BrandService {
     //   .createQueryBuilder()
     //   .select(['ib.id', 'ib.name', 'ib.image'])
     //   .from(CategoryBrandEntity, 'icb')
-    //   .innerJoin(BrandEntity, 'ib', 'ib.id = icb.brand_id')
+    //   .innerJoin(AlbumEntity, 'ib', 'ib.id = icb.brand_id')
     //   .where('icb.category_id = :categoryId', { categoryId })
     //   .getMany();
 
@@ -66,6 +66,11 @@ export class BrandService {
       .execute();
 
     return new Result(data);
+  }
+
+  @Get()
+  async findAll() {
+    return this.brandRepository.find();
   }
 
   async remove(id: number) {

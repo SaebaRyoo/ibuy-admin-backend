@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Get, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OrderItemsEntity } from './entities/order-items.entity';
@@ -40,18 +40,18 @@ export class OrderItemsService {
     return new Result(data);
   }
 
-  async update(id: number, spec: OrderItemsEntity) {
-    const data = await this.orderItemsRepository
-      .createQueryBuilder()
-      .update(OrderItemsEntity)
-      .set(spec)
-      .where('id = :id', { id })
-      .execute();
+  async update(id: number, orderItem: OrderItemsEntity) {
+    const data = await this.orderItemsRepository.update(id, orderItem);
     return new Result(data);
   }
 
   async remove(id: number) {
     await this.orderItemsRepository.delete(id);
     return new Result(null);
+  }
+
+  @Get()
+  async findAll() {
+    return this.orderItemsRepository.find();
   }
 }

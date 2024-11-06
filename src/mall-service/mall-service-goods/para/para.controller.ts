@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -38,5 +39,15 @@ export class ParaController {
   @Patch('/:id')
   update(@Param('id') id: number, @Body() para: ParaEntity) {
     return this.paraService.update(id, para);
+  }
+
+  @Delete('/:id')
+  async remove(@Param('id') id: number) {
+    return this.paraService.remove(id);
+  }
+
+  @Get()
+  async findAll() {
+    return this.paraService.findAll();
   }
 }

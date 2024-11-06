@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Get, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { SpuEntity } from './spu.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -244,5 +244,10 @@ export class SpuService {
   async remove(id: number) {
     await this.spuRepository.delete(id);
     return new Result(null);
+  }
+
+  @Get()
+  async findAll() {
+    return this.spuRepository.find();
   }
 }

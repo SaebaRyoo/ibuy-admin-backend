@@ -1,4 +1,4 @@
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { EntityMetadata, Repository, SelectQueryBuilder } from 'typeorm';
 
 export interface PageParam {
   pageSize: number;
@@ -22,6 +22,8 @@ export default async function findWithConditions<T>(
   const pageSize = pageParam.pageSize > 0 ? pageParam.pageSize : 10; // 默认每页 10 条
   const current = pageParam.current > 0 ? pageParam.current : 1; // 默认第一页
 
+  const metadata = repository.manager.connection.getMetadata(repository.target);
+
   // 创建查询构造器
   const qb: SelectQueryBuilder<T> = repository
     .createQueryBuilder(alias || 'entity')
@@ -36,7 +38,7 @@ export default async function findWithConditions<T>(
   if (conditionKeys.length === 0) {
     return qb.getManyAndCount();
   }
-  const propExist = filterValidPropertyNames(repository, conditionKeys); //判断是否为当前实体中的内容
+  const propExist = filterValidPropertyNames(metadata, conditionKeys); //判断是否为当前实体中的内容
 
   // 遍历条件对象的 key-value，根据条件动态添加查询条件
   propExist.forEach((key) => {
@@ -46,7 +48,19 @@ export default async function findWithConditions<T>(
     // 过滤掉空值
     if (value !== undefined && value !== null) {
       // 模糊匹配
-      qb.andWhere(`${snakeKey} LIKE :value`, { value: `%${value}%` });
+      // qb.andWhere(`${snakeKey} LIKE :value`, { value: `%${value}%` });
+      const columnType = typeof value;
+
+      // 根据字段的类型决定查询语句
+      if (columnType === 'string') {
+        // 字符串类型字段，使用 LIKE 进行模糊查询
+        qb.andWhere(`${snakeKey} LIKE :value`, { value: `%${value}%` });
+
+        //后续的日期需要单独处理
+      } else if (columnType === 'number') {
+        // 数字类型字段，使用精确匹配
+        qb.andWhere(`${snakeKey} = :value`, { value });
+      }
     }
   });
 
@@ -70,15 +84,13 @@ function camelToSnake(camelCase: string): string {
 
 /**
  * 过滤出合法的属性名
- * @param repository
+ * @param metadata
  * @param propertyNames
  */
-function filterValidPropertyNames<TEntity>(
-  repository: Repository<TEntity>,
+function filterValidPropertyNames(
+  metadata: EntityMetadata,
   propertyNames: string[],
 ): string[] {
-  const metadata = repository.manager.connection.getMetadata(repository.target);
-
   // 获取实体中所有的属性名
   const entityPropertyNames = metadata.columns.map(
     (column) => column.propertyName,

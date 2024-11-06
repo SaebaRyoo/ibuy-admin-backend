@@ -15,7 +15,6 @@ async function bootstrap() {
   // 异常过滤器
   app.useGlobalFilters(new AllExceptionsFilter(), new HttpExceptionFilter());
 
-  app.setGlobalPrefix('/api');
   // 接口版本化处理
   app.enableVersioning({
     defaultVersion: '1',

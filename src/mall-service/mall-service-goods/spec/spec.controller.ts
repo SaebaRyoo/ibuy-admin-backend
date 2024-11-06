@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -39,5 +40,15 @@ export class SpecController {
   @Patch('/:id')
   updateSpec(@Param('id') id: number, @Body() spec: SpecEntity) {
     return this.specService.updateSpec(id, spec);
+  }
+
+  @Delete('/:id')
+  async remove(@Param('id') id: number) {
+    return this.specService.remove(id);
+  }
+
+  @Get()
+  async findAll() {
+    return this.specService.findAll();
   }
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -39,5 +40,15 @@ export class CategoryController {
   @Patch('/:id')
   update(@Param('id') id: number, @Body() para: CategoryEntity) {
     return this.categoryService.update(id, para);
+  }
+
+  @Delete('/:id')
+  async remove(@Param('id') id: number) {
+    return this.categoryService.remove(id);
+  }
+
+  @Get()
+  async findAll() {
+    return this.categoryService.findAll();
   }
 }

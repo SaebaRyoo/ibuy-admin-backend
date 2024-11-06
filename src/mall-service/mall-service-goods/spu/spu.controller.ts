@@ -80,4 +80,14 @@ export class SpuController {
   update(@Param('id') id: number, @Body() para: SpuEntity) {
     return this.spuService.update(id, para);
   }
+
+  @Delete('/:id')
+  async remove(@Param('id') id: number) {
+    return this.spuService.remove(id);
+  }
+
+  @Get()
+  async findAll() {
+    return this.spuService.findAll();
+  }
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -54,5 +55,15 @@ export class CityController {
   @Patch('/:id')
   update(@Param('id') id: string, @Body() member: CityEntity) {
     return this.cityService.update(id, member);
+  }
+
+  @Delete('/:id')
+  async remove(@Param('id') id: number) {
+    return this.cityService.remove(id);
+  }
+
+  @Get()
+  async findAll() {
+    return this.cityService.findAll();
   }
 }

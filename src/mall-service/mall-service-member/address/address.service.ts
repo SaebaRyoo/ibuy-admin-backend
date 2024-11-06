@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Get, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { AddressEntity } from './address.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -50,5 +50,10 @@ export class AddressService {
   async remove(id: number) {
     await this.addressRepository.delete(id);
     return new Result(null);
+  }
+
+  @Get()
+  async findAll() {
+    return this.addressRepository.find();
   }
 }

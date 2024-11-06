@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Get, Injectable } from '@nestjs/common';
 import { InsertResult, Repository, SelectQueryBuilder } from 'typeorm';
 import { ProvinceEntity } from './province.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -51,5 +51,10 @@ export class ProvinceService {
   async remove(id: number) {
     await this.provinceRepository.delete(id);
     return new Result(null);
+  }
+
+  @Get()
+  async findAll() {
+    return this.provinceRepository.find();
   }
 }

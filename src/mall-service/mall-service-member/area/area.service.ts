@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Get, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { AreaEntity } from './area.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -50,5 +50,10 @@ export class AreaService {
   async remove(id: number) {
     await this.areaRepository.delete(id);
     return new Result(null);
+  }
+
+  @Get()
+  async findAll() {
+    return this.areaRepository.find();
   }
 }

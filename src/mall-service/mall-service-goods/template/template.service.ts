@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Get, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { TemplateEntity } from './template.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -33,17 +33,17 @@ export class TemplateService {
   }
 
   async updateTemplate(id: number, template: TemplateEntity) {
-    const data = await this.templateRepository
-      .createQueryBuilder()
-      .update(TemplateEntity)
-      .set(template)
-      .where('id = :id', { id })
-      .execute();
+    const data = await this.templateRepository.update(id, template);
     return new Result(data);
   }
 
   async remove(id: number) {
     await this.templateRepository.delete(id);
     return new Result(null);
+  }
+
+  @Get()
+  async findAll() {
+    return this.templateRepository.find();
   }
 }

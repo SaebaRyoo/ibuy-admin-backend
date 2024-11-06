@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -57,5 +58,15 @@ export class AddressController {
   @Patch('/:id')
   update(@Param('id') id: string, @Body() member: AddressEntity) {
     return this.addressService.update(id, member);
+  }
+
+  @Delete('/:id')
+  async remove(@Param('id') id: number) {
+    return this.addressService.remove(id);
+  }
+
+  @Get()
+  async findAll() {
+    return this.addressService.findAll();
   }
 }

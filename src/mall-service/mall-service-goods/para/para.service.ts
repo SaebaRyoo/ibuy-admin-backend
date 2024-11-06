@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Get, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { ParaEntity } from './para.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -45,5 +45,10 @@ export class ParaService {
   async remove(id: number) {
     await this.paraRepository.delete(id);
     return new Result(null);
+  }
+
+  @Get()
+  async findAll() {
+    return this.paraRepository.find();
   }
 }

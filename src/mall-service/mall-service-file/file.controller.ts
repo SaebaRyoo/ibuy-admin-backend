@@ -15,7 +15,7 @@ import { FileService } from './file.service';
 export class FileController {
   constructor(private readonly fileService: FileService) {}
 
-  @Post('upload')
+  @Post('/upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: any, @Query() query: any) {
     return await this.fileService.uploadFile(
@@ -26,16 +26,27 @@ export class FileController {
     );
   }
 
-  @Get('download')
-  downloadFile(@Query() query: any) {
-    return this.fileService.downloadFile(
+  // @Get('/read')
+  // readFile(
+  //   @Body() body: { bucketName: string; objectName: string; path: string },
+  // ) {
+  //   return this.fileService.readFile(
+  //     body.bucketName,
+  //     body.objectName,
+  //     body.path,
+  //   );
+  // }
+
+  @Get('/download')
+  readFileStream(@Query() query: any) {
+    return this.fileService.readFileStream(
       query.bucketName,
       query.objectName,
       query.path,
     );
   }
 
-  @Delete()
+  @Delete('/delete')
   deleteFile(@Query() query: any) {
     return this.fileService.deleteFile(
       query.bucketName,

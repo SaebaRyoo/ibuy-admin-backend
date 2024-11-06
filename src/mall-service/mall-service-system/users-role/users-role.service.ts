@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Get, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UsersRoleEntity } from './users-role.entity';
@@ -22,8 +22,18 @@ export class UsersRoleService {
     return new Result(data);
   }
 
-  async remove(id: number) {
-    const data = await this.usersRoleRepository.delete(id);
+  async add(userRole: UsersRoleEntity) {
+    const data = await this.usersRoleRepository.insert(userRole);
     return new Result(data);
+  }
+
+  async update(id: number, userRole: UsersRoleEntity) {
+    const data = await this.usersRoleRepository.update(id, userRole);
+    return new Result(data);
+  }
+
+  async remove(id: number) {
+    await this.usersRoleRepository.delete(id);
+    return new Result(null);
   }
 }

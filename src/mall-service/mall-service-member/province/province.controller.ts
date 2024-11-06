@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Inject,
   Param,
@@ -57,5 +58,15 @@ export class ProvinceController {
   @Patch('/:id')
   update(@Param('id') id: string, @Body() member: ProvinceEntity) {
     return this.provinceService.update(id, member);
+  }
+
+  @Delete('/:id')
+  async remove(@Param('id') id: number) {
+    return this.provinceService.remove(id);
+  }
+
+  @Get()
+  async findAll() {
+    return this.provinceService.findAll();
   }
 }

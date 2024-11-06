@@ -12,7 +12,7 @@ import { AuthGuard } from './common/guards/auth.guard';
 import { PermissionGuard } from './common/guards/permission.guard';
 
 import { AuthModule } from './mall-service/mall-service-system/auth/auth.module';
-import { UsersModule } from './mall-service/mall-service-system/users/users.module';
+import { SysUserModule } from './mall-service/mall-service-system/users/sys-user.module';
 import { RoleModule } from './mall-service/mall-service-system/role/role.module';
 import { UsersRoleModule } from './mall-service/mall-service-system/users-role/users-role.module';
 import { FileModule } from './mall-service/mall-service-file/file.module';
@@ -33,13 +33,14 @@ import { ProvinceModule } from './mall-service/mall-service-member/province/prov
 import { CityModule } from './mall-service/mall-service-member/city/city.module';
 import { AreaModule } from './mall-service/mall-service-member/area/area.module';
 import { AddressModule } from './mall-service/mall-service-member/address/address.module';
+import { AlbumModule } from './mall-service/mall-service-goods/album/album.module';
 
 @Module({
   imports: [
     RoleModule,
     UsersRoleModule,
     AuthModule,
-    UsersModule,
+    SysUserModule,
     ConfigModule.forRoot({
       envFilePath: ['.env'],
       isGlobal: true, // You will not need to import ConfigModule in other modules once it's been loaded in the root module
@@ -101,6 +102,7 @@ import { AddressModule } from './mall-service/mall-service-member/address/addres
     }),
     FileModule,
     // 商品相关模块
+    AlbumModule,
     TemplateModule,
     SpecModule,
     ParaModule,

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Get, Injectable } from '@nestjs/common';
 import { InsertResult, Repository, SelectQueryBuilder } from 'typeorm';
 import { MemberEntity } from './member.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -52,5 +52,10 @@ export class MemberService {
   async remove(id: number) {
     await this.memberRepository.delete(id);
     return new Result(null);
+  }
+
+  @Get()
+  async findAll() {
+    return this.memberRepository.find();
   }
 }
