@@ -49,6 +49,7 @@ export class SpecService {
 
   @Get()
   async findAll() {
-    return this.specRepository.find();
+    const data = await this.specRepository.find();
+    return new Result(data);
   }
 }

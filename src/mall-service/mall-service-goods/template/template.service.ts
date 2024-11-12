@@ -44,6 +44,7 @@ export class TemplateService {
 
   @Get()
   async findAll() {
-    return this.templateRepository.find();
+    const data = await this.templateRepository.find();
+    return new Result(data);
   }
 }

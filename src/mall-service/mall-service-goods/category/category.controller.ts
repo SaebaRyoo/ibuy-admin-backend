@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CategoryEntity } from './category.entity';
-import { AddressEntity } from '../../mall-service-member/address/address.entity';
 
 @Controller('category')
 export class CategoryController {
@@ -33,8 +32,17 @@ export class CategoryController {
   }
 
   @Get('/:id')
-  async getParaById(@Param('id') id: number) {
+  async getById(@Param('id') id: number) {
     return this.categoryService.findById(id);
+  }
+
+  /**
+   * 根据父节点id查询分类
+   * @param pid
+   */
+  @Get('/list/:pid')
+  async findByParentId(@Param('pid') pid: number) {
+    return this.categoryService.findByParentId(pid);
   }
 
   @Patch('/:id')

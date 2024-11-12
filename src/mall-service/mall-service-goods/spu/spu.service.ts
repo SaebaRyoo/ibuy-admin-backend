@@ -151,9 +151,10 @@ export class SpuService {
    */
   async saveGoods(goods: GoodsType) {
     const spu = goods.spu;
+
+    const idWorker = new IDWorker(1n, 1n);
     //为空则是新增，否则是修改
     if (!spu.id) {
-      const idWorker = new IDWorker(1n, 1n);
       spu.id = idWorker.nextId().toString();
       //将用户传来的goods.spu部分存储到spu表中
       await this.spuRepository.insert(spu);
@@ -196,7 +197,6 @@ export class SpuService {
         name += ' ' + value;
       }
       sku.name = name;
-      const idWorker = new IDWorker(1n, 1n);
       sku.id = idWorker.nextId().toString();
       sku.spuId = spu.id;
       sku.createTime = date;
@@ -248,6 +248,7 @@ export class SpuService {
 
   @Get()
   async findAll() {
-    return this.spuRepository.find();
+    const data = await this.spuRepository.find();
+    return new Result(data);
   }
 }

@@ -70,7 +70,8 @@ export class BrandService {
 
   @Get()
   async findAll() {
-    return this.brandRepository.find();
+    const data = await this.brandRepository.find();
+    return new Result(data);
   }
 
   async remove(id: number) {

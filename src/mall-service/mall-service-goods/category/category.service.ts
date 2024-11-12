@@ -30,6 +30,11 @@ export class CategoryService {
     return new Result(data);
   }
 
+  async findByParentId(pid: number) {
+    const data = await this.categoryRepository.findBy({ parentId: pid });
+    return new Result(data);
+  }
+
   async add(para: CategoryEntity) {
     const data = await this.categoryRepository.insert(para);
     return new Result(data);
@@ -52,6 +57,7 @@ export class CategoryService {
 
   @Get()
   async findAll() {
-    return this.categoryRepository.find();
+    const data = await this.categoryRepository.find();
+    return new Result(data);
   }
 }

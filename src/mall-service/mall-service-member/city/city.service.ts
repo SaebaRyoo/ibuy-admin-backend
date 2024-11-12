@@ -54,6 +54,7 @@ export class CityService {
 
   @Get()
   async findAll() {
-    return this.cityRepository.find();
+    const data = await this.cityRepository.find();
+    return new Result(data);
   }
 }

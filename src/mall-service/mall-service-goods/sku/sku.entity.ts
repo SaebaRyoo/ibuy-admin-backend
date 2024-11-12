@@ -21,19 +21,19 @@ export class SkuEntity {
   @Column({ name: 'alert_num' })
   alertNum: number; // 库存预警数量
 
-  @Column()
+  @Column({ nullable: true })
   image: string; // 商品图片
 
-  @Column()
+  @Column({ nullable: true })
   images: string; // 商品图片列表
 
-  @Column()
+  @Column({ nullable: true })
   weight: number; // 重量（克）
 
-  @Column({ name: 'create_time' })
+  @Column({ name: 'create_time', nullable: true })
   createTime: Date; // 创建时间
 
-  @Column({ name: 'update_time' })
+  @Column({ name: 'update_time', nullable: true })
   updateTime: Date; // 更新时间
 
   @Column({ name: 'spu_id' })
@@ -51,12 +51,12 @@ export class SkuEntity {
   @Column({ type: 'json' })
   spec: object; // 规格
 
-  @Column({ name: 'sale_num' })
+  @Column({ name: 'sale_num', nullable: true })
   saleNum: number; // 销量
 
-  @Column({ name: 'comment_num' })
+  @Column({ name: 'comment_num', nullable: true })
   commentNum: number; // 评论数
 
-  @Column()
+  @Column({ nullable: true })
   status: string; // 商品状态 1-正常，2-下架，3-删除
 }

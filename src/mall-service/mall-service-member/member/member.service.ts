@@ -56,6 +56,7 @@ export class MemberService {
 
   @Get()
   async findAll() {
-    return this.memberRepository.find();
+    const data = await this.memberRepository.find();
+    return new Result(data);
   }
 }

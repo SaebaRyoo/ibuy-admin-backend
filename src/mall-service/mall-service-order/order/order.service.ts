@@ -35,24 +35,28 @@ export class OrderService {
   }
 
   async findById(id: string) {
-    return this.orderRepository.findOneBy({ id });
+    const data = await this.orderRepository.findOneBy({ id });
+    return new Result(data);
   }
 
   async update(id: number, spec: OrderEntity) {
-    return this.orderRepository
+    const data = await this.orderRepository
       .createQueryBuilder()
       .update(OrderEntity)
       .set(spec)
       .where('id = :id', { id })
       .execute();
+    return new Result(data);
   }
 
-  async remove(id: number): Promise<void> {
-    await this.orderRepository.delete(id);
+  async remove(id: number) {
+    const data = await this.orderRepository.delete(id);
+    return new Result(data);
   }
 
   @Get()
   async findAll() {
-    return this.orderRepository.find();
+    const data = await this.orderRepository.find();
+    return new Result(data);
   }
 }

@@ -54,6 +54,7 @@ export class AreaService {
 
   @Get()
   async findAll() {
-    return this.areaRepository.find();
+    const data = await this.areaRepository.find();
+    return new Result(data);
   }
 }

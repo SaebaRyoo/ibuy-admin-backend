@@ -55,6 +55,7 @@ export class ProvinceService {
 
   @Get()
   async findAll() {
-    return this.provinceRepository.find();
+    const data = await this.provinceRepository.find();
+    return new Result(data);
   }
 }

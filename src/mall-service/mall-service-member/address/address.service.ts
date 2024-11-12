@@ -54,6 +54,7 @@ export class AddressService {
 
   @Get()
   async findAll() {
-    return this.addressRepository.find();
+    const data = await this.addressRepository.find();
+    return new Result(data);
   }
 }

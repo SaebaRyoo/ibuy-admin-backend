@@ -12,7 +12,6 @@ import {
 import { SkuService } from './sku.service';
 import { SkuEntity } from './sku.entity';
 import { Public } from '../../../common/decorators/metadata/public.decorator';
-import { AddressEntity } from '../../mall-service-member/address/address.entity';
 
 @Controller('sku')
 export class SkuController {
@@ -52,5 +51,15 @@ export class SkuController {
   @Get()
   async findAll() {
     return this.skuService.findAll();
+  }
+
+  /**
+   * 根据spu id查询sku数据
+   * @param spuId
+   * @return
+   */
+  @Get('/spu/:spuId')
+  async findBySpuId(@Param('spuId') spuId: string) {
+    return this.skuService.findBySpuId(spuId);
   }
 }

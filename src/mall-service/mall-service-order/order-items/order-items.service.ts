@@ -52,6 +52,7 @@ export class OrderItemsService {
 
   @Get()
   async findAll() {
-    return this.orderItemsRepository.find();
+    const data = await this.orderItemsRepository.find();
+    return new Result(data);
   }
 }

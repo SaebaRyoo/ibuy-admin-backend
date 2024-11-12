@@ -49,6 +49,7 @@ export class ParaService {
 
   @Get()
   async findAll() {
-    return this.paraRepository.find();
+    const data = await this.paraRepository.find();
+    return new Result(data);
   }
 }

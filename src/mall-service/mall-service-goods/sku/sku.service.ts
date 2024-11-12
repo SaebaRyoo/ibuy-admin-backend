@@ -41,6 +41,11 @@ export class SkuService {
     return new Result(data);
   }
 
+  async findBySpuId(spuId: string) {
+    const data = await this.skuRepository.findBy({ spuId });
+    return new Result(data);
+  }
+
   async addSku(sku: SkuEntity) {
     const data = await this.skuRepository.insert(sku);
     return new Result(data);

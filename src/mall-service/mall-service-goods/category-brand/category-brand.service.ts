@@ -49,6 +49,7 @@ export class CategoryBrandService {
 
   @Get()
   async findAll() {
-    return this.categoryBrandRepository.find();
+    const data = await this.categoryBrandRepository.find();
+    return new Result(data);
   }
 }
