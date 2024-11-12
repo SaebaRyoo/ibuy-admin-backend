@@ -36,7 +36,7 @@ export class ProvinceController {
    * 添加省份
    * @param body
    */
-  @Post('/add')
+  @Post()
   add(@Body() body: ProvinceEntity) {
     return this.provinceService.add(body);
   }

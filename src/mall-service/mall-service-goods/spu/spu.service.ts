@@ -12,6 +12,7 @@ import findWithConditions from '../../../common/utils/findWithConditions';
 
 @Injectable()
 export class SpuService {
+  private idWorker: IDWorker;
   constructor(
     @InjectRepository(SpuEntity)
     private spuRepository: Repository<SpuEntity>,
@@ -24,7 +25,9 @@ export class SpuService {
 
     @InjectRepository(BrandEntity)
     private brandRepository: Repository<BrandEntity>,
-  ) {}
+  ) {
+    this.idWorker = new IDWorker(1n, 1n);
+  }
 
   /***
    * 批量上架
@@ -152,10 +155,10 @@ export class SpuService {
   async saveGoods(goods: GoodsType) {
     const spu = goods.spu;
 
-    const idWorker = new IDWorker(1n, 1n);
+    // const idWorker = new IDWorker(1n, 1n);
     //为空则是新增，否则是修改
     if (!spu.id) {
-      spu.id = idWorker.nextId().toString();
+      spu.id = this.idWorker.nextId().toString();
       //将用户传来的goods.spu部分存储到spu表中
       await this.spuRepository.insert(spu);
     } else {
@@ -197,7 +200,7 @@ export class SpuService {
         name += ' ' + value;
       }
       sku.name = name;
-      sku.id = idWorker.nextId().toString();
+      sku.id = this.idWorker.nextId().toString();
       sku.spuId = spu.id;
       sku.createTime = date;
       sku.updateTime = date;

@@ -26,7 +26,7 @@ export class ParaController {
     return await this.paraService.findList({ current, pageSize }, para);
   }
 
-  @Post('/add')
+  @Post()
   create(@Body() body: any) {
     return this.paraService.add(body);
   }

@@ -25,7 +25,7 @@ export class AlbumController {
     return this.albumService.findList({ current, pageSize }, brand);
   }
 
-  @Post('/add')
+  @Post()
   create(@Body() body: any) {
     return this.albumService.add(body);
   }

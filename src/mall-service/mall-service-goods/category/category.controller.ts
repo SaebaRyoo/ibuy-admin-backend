@@ -26,7 +26,7 @@ export class CategoryController {
     return this.categoryService.findList({ current, pageSize }, category);
   }
 
-  @Post('/add')
+  @Post()
   create(@Body() body: any) {
     return this.categoryService.add(body);
   }

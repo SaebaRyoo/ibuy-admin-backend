@@ -33,7 +33,7 @@ export class CityController {
    * 添加
    * @param body
    */
-  @Post('/add')
+  @Post()
   add(@Body() body: CityEntity) {
     return this.cityService.add(body);
   }

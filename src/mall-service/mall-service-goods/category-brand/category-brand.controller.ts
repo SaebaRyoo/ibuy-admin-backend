@@ -30,7 +30,7 @@ export class CategoryBrandController {
     );
   }
 
-  @Post('/add')
+  @Post()
   async createTemplate(@Body() body: any) {
     return this.categoryBrandService.addTemplate(body);
   }

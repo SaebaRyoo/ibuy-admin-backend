@@ -66,7 +66,7 @@ export class SpuController {
     return this.spuService.findList({ current, pageSize }, spu);
   }
 
-  @Post('/add')
+  @Post()
   create(@Body() body: any) {
     return this.spuService.add(body);
   }

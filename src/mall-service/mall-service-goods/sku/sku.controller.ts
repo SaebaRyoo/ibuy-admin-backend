@@ -28,7 +28,7 @@ export class SkuController {
     return await this.skuService.findList({ current, pageSize }, sku);
   }
 
-  @Post('/add')
+  @Post()
   createSku(@Body() body: any) {
     return this.skuService.addSku(body);
   }

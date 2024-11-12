@@ -36,7 +36,7 @@ export class MemberController {
    * 添加会员
    * @param body
    */
-  @Post('/add')
+  @Post()
   add(@Body() body: any) {
     return this.memberService.add(body);
   }

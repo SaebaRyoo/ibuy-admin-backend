@@ -31,7 +31,7 @@ export class BrandController {
     return this.brandService.findList({ current, pageSize }, brand);
   }
 
-  @Post('/add')
+  @Post()
   create(@Body() body: any) {
     return this.brandService.add(body);
   }

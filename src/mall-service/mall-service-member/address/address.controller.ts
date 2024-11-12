@@ -36,7 +36,7 @@ export class AddressController {
    * 添加
    * @param body
    */
-  @Post('/add')
+  @Post()
   add(@Body() body: AddressEntity) {
     return this.addressService.add(body);
   }

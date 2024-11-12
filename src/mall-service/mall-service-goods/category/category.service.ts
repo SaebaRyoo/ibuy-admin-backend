@@ -35,16 +35,16 @@ export class CategoryService {
     return new Result(data);
   }
 
-  async add(para: CategoryEntity) {
-    const data = await this.categoryRepository.insert(para);
+  async add(category: CategoryEntity) {
+    const data = await this.categoryRepository.insert(category);
     return new Result(data);
   }
 
-  async update(id: number, para: CategoryEntity) {
+  async update(id: number, category: CategoryEntity) {
     const data = await this.categoryRepository
       .createQueryBuilder()
       .update(CategoryEntity)
-      .set(para)
+      .set(category)
       .where('id = :id', { id })
       .execute();
     return new Result(data);

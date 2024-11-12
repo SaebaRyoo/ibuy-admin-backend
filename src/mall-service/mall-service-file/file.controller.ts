@@ -17,12 +17,12 @@ export class FileController {
 
   @Post('/upload')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: any, @Query() query: any) {
+  async uploadFile(@UploadedFile() file: any, @Query('path') path: string) {
     return await this.fileService.uploadFile(
       'mall',
       file.originalname,
       file.buffer,
-      query.path,
+      path,
     );
   }
 

@@ -36,7 +36,7 @@ export class AreaController {
    * 添加
    * @param body
    */
-  @Post('/add')
+  @Post()
   add(@Body() body: AreaEntity) {
     return this.areaService.add(body);
   }

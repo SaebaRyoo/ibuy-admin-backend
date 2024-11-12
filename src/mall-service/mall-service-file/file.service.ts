@@ -32,10 +32,13 @@ export class FileService {
     path: string = '/',
   ) {
     await this.minioClient.putObject(bucketName, `${path}/${objectName}`, data);
+    const HOST = this.configService.get('MINIO_HOST');
+    const PORT = parseInt(this.configService.get('MINIO_PORT'));
     return new Result({
       bucketName,
       path,
       objectName,
+      imgUrl: `http://${HOST}:${PORT}/${bucketName}/${path}/${objectName}`,
     });
   }
 

@@ -25,7 +25,7 @@ export class OrderItemsController {
     return this.orderItemsService.findList({ current, pageSize }, orderItem);
   }
 
-  @Post('/add')
+  @Post()
   add(@Body() body: any) {
     return this.orderItemsService.add(body);
   }
