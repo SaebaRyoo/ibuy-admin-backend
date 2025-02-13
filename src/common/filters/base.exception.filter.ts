@@ -15,7 +15,7 @@ import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
  */
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
-  @Inject(WINSTON_MODULE_PROVIDER) private logger: Logger;
+  constructor(@Inject(WINSTON_MODULE_PROVIDER) private logger: Logger) {}
 
   catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();

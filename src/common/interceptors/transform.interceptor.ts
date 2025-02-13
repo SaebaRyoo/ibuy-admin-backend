@@ -3,9 +3,12 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
+  Inject,
+  Logger,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 interface Response<T> {
   data: T;
@@ -18,6 +21,7 @@ interface Response<T> {
 export class TransformInterceptor<T>
   implements NestInterceptor<T, Response<T>>
 {
+  constructor(@Inject(WINSTON_MODULE_PROVIDER) private logger: Logger) {}
   intercept(
     context: ExecutionContext,
     next: CallHandler,

@@ -4,15 +4,20 @@ import {
   ArgumentsHost,
   HttpException,
   HttpStatus,
+  Inject,
+  Logger,
 } from '@nestjs/common';
 import { BusinessException } from './business.exception.filter';
 import { Request, Response } from 'express';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 /**
  * 捕获 HTTP 相关异常
  */
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
+  constructor(@Inject(WINSTON_MODULE_PROVIDER) private logger: Logger) {}
+
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
