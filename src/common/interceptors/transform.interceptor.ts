@@ -9,6 +9,8 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
+import { getReqMainInfo } from '../utils/GetReqMainInfo';
+import { Request } from 'express';
 
 interface Response<T> {
   data: T;
@@ -26,16 +28,24 @@ export class TransformInterceptor<T>
     context: ExecutionContext,
     next: CallHandler,
   ): Observable<Response<T>> {
+    const ctx = context.switchToHttp();
+    const req = ctx.getRequest<Request>();
     return next.handle().pipe(
-      map((data) => ({
-        data: data?.data,
-        code: data?.code,
-        extra: {
-          path: context.switchToHttp().getRequest().url,
-        },
-        message: data?.message,
-        success: true,
-      })),
+      map((data) => {
+        this.logger.log('info', {
+          responseData: data,
+          req: getReqMainInfo(req),
+        });
+        return {
+          data: data?.data,
+          code: data?.code,
+          extra: {
+            path: context.switchToHttp().getRequest().url,
+          },
+          message: data?.message,
+          success: true,
+        };
+      }),
     );
   }
 }

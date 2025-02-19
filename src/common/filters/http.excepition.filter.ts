@@ -24,6 +24,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
+    this.logger.error(
+      `'HttpExceptionFilter' ${request.method} ${request.url} ${exception.getResponse()}`,
+    );
+
     // 处理业务异常
     if (exception instanceof BusinessException) {
       const error = exception.getResponse();
@@ -39,7 +43,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       return;
     }
 
-    console.log(exception);
     response.status(status).send({
       data: null,
       status: status,

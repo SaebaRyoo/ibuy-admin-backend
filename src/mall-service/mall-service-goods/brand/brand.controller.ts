@@ -5,12 +5,14 @@ import {
   Get,
   Inject,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
 } from '@nestjs/common';
 import { BrandService } from './brand.service';
 import { BrandEntity } from './brand.entity';
+import { CreateBrandDto } from './dto/create-brand.dto';
 
 @Controller('brand')
 export class BrandController {
@@ -18,26 +20,28 @@ export class BrandController {
   private brandService: BrandService;
 
   @Get('/category/:category_id')
-  async findBrandByCategoryId(@Param('category_id') category_id: number) {
+  async findBrandByCategoryId(
+    @Param('category_id', ParseIntPipe) category_id: number,
+  ) {
     return this.brandService.findBrandByCategoryId(category_id);
   }
 
   @Post('/list/:current/:pageSize')
   async findList(
-    @Param('current') current: number,
-    @Param('pageSize') pageSize: number,
+    @Param('current', ParseIntPipe) current: number,
+    @Param('pageSize', ParseIntPipe) pageSize: number,
     @Body() brand: BrandEntity,
   ) {
     return this.brandService.findList({ current, pageSize }, brand);
   }
 
   @Post()
-  create(@Body() body: any) {
+  create(@Body() body: CreateBrandDto) {
     return this.brandService.add(body);
   }
 
   @Get('/:id')
-  async getParaById(@Param('id') id: number) {
+  async getBrandById(@Param('id', ParseIntPipe) id: number) {
     return this.brandService.findById(id);
   }
 

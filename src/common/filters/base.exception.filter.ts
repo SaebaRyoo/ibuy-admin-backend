@@ -22,10 +22,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    // request.log.error(exception);
-    // this.logger.error(exception);
 
-    console.log(exception);
+    this.logger.error(
+      `'BaseExceptionFilter' ${request.method} ${request.url} ${exception}`,
+    );
+
     // 非 HTTP 标准异常的处理。
     response.status(HttpStatus.SERVICE_UNAVAILABLE).send({
       statusCode: HttpStatus.SERVICE_UNAVAILABLE,

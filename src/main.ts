@@ -5,7 +5,7 @@ import {
   WINSTON_MODULE_PROVIDER,
 } from 'nest-winston';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
-import { VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { AllExceptionsFilter } from './common/filters/base.exception.filter';
 import { HttpExceptionFilter } from './common/filters/http.excepition.filter';
 
@@ -22,6 +22,9 @@ async function bootstrap() {
     new AllExceptionsFilter(app.get(WINSTON_MODULE_PROVIDER)),
     new HttpExceptionFilter(app.get(WINSTON_MODULE_PROVIDER)),
   );
+
+  // 全局pipe
+  app.useGlobalPipes(new ValidationPipe());
 
   // 接口版本化处理
   app.enableVersioning({

@@ -5,6 +5,7 @@ import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { CategoryBrandEntity } from '../category-brand/category-brand.entity';
 import Result from '../../../common/utils/Result';
 import findWithConditions from '../../../common/utils/findWithConditions';
+import { CreateBrandDto } from './dto/create-brand.dto';
 
 @Injectable()
 export class BrandService {
@@ -52,7 +53,7 @@ export class BrandService {
     return new Result(data);
   }
 
-  async add(para: BrandEntity) {
+  async add(para: CreateBrandDto) {
     const data = await this.brandRepository.insert(para);
     return new Result(data);
   }

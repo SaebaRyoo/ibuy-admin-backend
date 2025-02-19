@@ -23,8 +23,8 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.loginName, signInDto.password);
+  signIn(@Body() user: Record<string, any>) {
+    return this.authService.signIn(user.loginName, user.password);
   }
 
   @Get('profile')
