@@ -49,16 +49,7 @@ jobs:
           # 本地源目录
           SOURCE: "."
           # 排除不需要的文件或目录，只需要dist, docker-compose.yml Dockerfile
-          EXCLUDE: |
-            node_modules
-            .git
-            .github
-            .gitignore
-            logs
-            src
-            yarn.lock
-            package.json
-            test
+          EXCLUDE: "/node_modules/, /test/, /src/, .git/, .github/, .gitignore"
           
 
           # 目标目录
