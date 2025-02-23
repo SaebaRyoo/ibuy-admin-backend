@@ -5,16 +5,16 @@ FROM node:20.18.0-alpine AS builder
 WORKDIR /ibuy-backend
 
 # 复制 package.json 和 yarn.lock 文件
-#COPY package*.json yarn.lock ./
+COPY package*.json yarn.lock ./
 #
 ## 安装依赖（使用 yarn 代替 npm）
-#RUN yarn install
+RUN yarn install
 
 # 复制项目的其他文件
 COPY . .
 #
 ## 使用 yarn 进行构建
-#RUN yarn build
+RUN yarn build
 
 # 暴露应用的端口
 EXPOSE 8001
