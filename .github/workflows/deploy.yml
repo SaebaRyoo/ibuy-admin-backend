@@ -43,7 +43,9 @@ jobs:
           SCRIPT_BEFORE: |
             # 创建工作目录
             mkdir -p ~/work/ibuy-backend
-            rm -rf ~/work/ibuy-backend/*
+            rm -rf ~/work/ibuy-backend/dist
+            rm -rf ~/work/ibuy-backend/docker-compose.yml
+            rm -rf ~/work/ibuy-backend/Dockerfile
           # 本地源目录
           SOURCE: "."
           # 排除不需要的文件或目录，只需要dist, docker-compose.yml Dockerfile
