@@ -12,7 +12,7 @@ services:
     ports:
       - "8001:8001"
     volumes:
-      - /usr/local/docker-volumes/ibuy-backend/logs:/ibuy-backend/logs
+      - ~/data/docker-volumes/ibuy-backend/logs:/ibuy-backend/logs
     environment:
       - NODE_ENV=production
       - POSTGRES_HOST=${POSTGRES_HOST}
