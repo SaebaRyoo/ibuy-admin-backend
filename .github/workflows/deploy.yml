@@ -44,9 +44,11 @@ jobs:
             # 创建工作目录
             mkdir -p ~/work/ibuy-backend
             rm -rf ~/work/ibuy-backend/*
-            mkdir -p ~/work/ibuy-backend/dist
-          # 本地源目录
-          SOURCE: "/dist/ Dockerfile docker-compose.yml"
+          # 本地源目录（单独传输多个文件或目录）
+          SOURCE: |
+            dist/
+            Dockerfile
+            docker-compose.yml
           # 目标目录
           TARGET: '~/work/ibuy-backend'
           # 部署后执行的脚本
