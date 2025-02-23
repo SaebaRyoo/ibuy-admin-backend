@@ -14,21 +14,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 安装 Node.js
-      - name: use node
-        uses: actions/setup-node@v4.2.0
-        with:
-          node-version: 20
-          cache: 'yarn'
-
-      # 安装依赖
-      - name: install
-        run: yarn install
-
-      # 打包项目
-      - name: build
-        run: yarn run build
-
       # 部署到服务器
       - name: Deploy to server
         uses: easingthemes/ssh-deploy@v5.1.0
@@ -40,31 +25,20 @@ jobs:
           # 服务器私钥
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_PRIVATE_KEY }}
           # 本地源目录
-#          SOURCE: "/dist/"
+          SOURCE: "."
+#          EXCLUDE: "/node_modules/"
           # 部署前执行的脚本
-#          SCRIPT_BEFORE: |
-#            # 创建工作目录
-#            mkdir -p ~/work/ibuy-backend
-#            rm -rf ~/work/ibuy-backend/dist/*
-          # 目标目录
-#          TARGET: '~/work/ibuy-backend/dist'
-          # 部署后执行的脚本
-          SCRIPT_AFTER: |
+          SCRIPT_BEFORE: |
             # 创建工作目录
             mkdir -p ~/work/ibuy-backend
-            
+            # 删除构建目录
+            rm -rf ~/work/ibuy-backend/dist
+          # 目标目录（将github上已经提交的内容全部上传到服务器对应为止）
+          TARGET: '~/work/ibuy-backend'
+          # 部署后执行的脚本
+          SCRIPT_AFTER: |
             # 进入工作目录
             cd ~/work/ibuy-backend
 
-            # 检查项目目录是否存在，如果不存在则克隆仓库
-            if [ ! -d ".git" ]; then
-              echo "项目目录未初始化，正在克隆仓库..."
-              git clone https://github.com/SaebaRyoo/ibuy-backend.git ~/work/ibuy-backend
-            fi
-            # 拉取最新代码
-            echo "拉取最新代码..."
-            git pull origin main
-
             # 构建并启动 Docker 容器
-            echo "启动 Docker 容器..."
             docker-compose up --build -d
