@@ -32,14 +32,10 @@ import { CityModule } from './mall-service/mall-service-member/city/city.module'
 import { AreaModule } from './mall-service/mall-service-member/area/area.module';
 import { AddressModule } from './mall-service/mall-service-member/address/address.module';
 import { AlbumModule } from './mall-service/mall-service-goods/album/album.module';
+import { MenuModule } from './mall-service/mall-service-system/menu/menu.module';
 
 @Module({
   imports: [
-    RoleModule,
-    UsersRoleModule,
-    AuthModule,
-    SysUserModule,
-
     ConfigModule.forRoot({
       envFilePath:
         process.env.NODE_ENV === 'development' ? ['.env.dev'] : ['.env'],
@@ -101,6 +97,15 @@ import { AlbumModule } from './mall-service/mall-service-goods/album/album.modul
         }),
       ],
     }),
+
+    // 系统用户
+    AuthModule,
+    SysUserModule,
+    RoleModule,
+    UsersRoleModule,
+    MenuModule,
+
+    // 文件
     FileModule,
     // 商品相关模块
     AlbumModule,

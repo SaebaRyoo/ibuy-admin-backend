@@ -29,10 +29,6 @@ export class AuthController {
 
   @Get('profile')
   getProfile(@Request() req) {
-    this.logger.log('info', 'Calling getProfile()', AuthController.name);
-    // this.logger.debug('Calling getProfile()', AuthController.name);
-    // this.logger.verbose('Calling getProfile()', AuthController.name);
-    // this.logger.error('Calling getProfile()', AuthController.name);
-    return req.user;
+    return this.authService.getProfile(req);
   }
 }

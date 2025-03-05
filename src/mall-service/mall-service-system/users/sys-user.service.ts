@@ -23,6 +23,11 @@ export class UsersService {
     return new Result(data);
   }
 
+  async findById(id: number) {
+    const data = await this.usersRepository.findOneBy({ id });
+    return new Result(data);
+  }
+
   async findOne(id: number): Promise<Result<SysUsersEntity>> {
     const data = await this.usersRepository.findOneBy({ id });
     return new Result(data);
