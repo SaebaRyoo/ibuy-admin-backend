@@ -67,4 +67,15 @@ export class UsersService {
     const data = await this.usersRepository.delete(id);
     return new Result(data, '删除成功');
   }
+
+  async incrementTokenVersion(userId: number): Promise<void> {
+    await this.usersRepository
+      .createQueryBuilder()
+      .update(SysUsersEntity)
+      .set({
+        tokenVersion: () => 'tokenVersion + 1',
+      })
+      .where('id = :id', { id: userId })
+      .execute();
+  }
 }

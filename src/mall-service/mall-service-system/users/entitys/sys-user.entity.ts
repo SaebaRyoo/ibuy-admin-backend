@@ -13,4 +13,7 @@ export class SysUsersEntity {
 
   @Column({ nullable: true })
   status: string;
+
+  @Column({ default: 0 })
+  tokenVersion: number; // 新增token版本号
 }
