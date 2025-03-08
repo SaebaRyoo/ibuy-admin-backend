@@ -8,23 +8,36 @@ import * as bcrypt from 'bcrypt';
 import Result from '../../../common/utils/Result';
 import { UsersRoleService } from '../users-role/users-role.service';
 import { Response } from 'express';
+import parseTimeToSeconds from '../../../common/utils/parseTimeToSeconds';
 
 @Injectable()
 export class AuthService {
+  accessTokenExpiresIn: string;
+  refreshTokenExpiresIn: string;
   constructor(
     private readonly usersService: UsersService,
     private readonly usersRoleService: UsersRoleService,
     private readonly jwtService: JwtService,
     @InjectRedis() private readonly redis: Redis,
     private configService: ConfigService,
-  ) {}
+  ) {
+    this.accessTokenExpiresIn = this.configService.get('JWT_ACCESS_EXPIRES_IN');
+    this.refreshTokenExpiresIn = this.configService.get(
+      'JWT_REFRESH_EXPIRES_IN',
+    );
+  }
 
   private async storeRefreshToken(
     userId: number,
     refreshToken: string,
   ): Promise<void> {
     const key = `refresh_token:${userId}`;
-    await this.redis.set(key, refreshToken, 'EX', 7 * 24 * 60 * 60); // 7天过期
+    await this.redis.set(
+      key,
+      refreshToken,
+      'EX',
+      parseTimeToSeconds(this.refreshTokenExpiresIn), // 7天过期
+    );
   }
 
   private async invalidateRefreshToken(userId: number): Promise<void> {
@@ -52,7 +65,7 @@ export class AuthService {
       // strict: 表示仅在相同站点（同源）的请求中发送Cookie，防止CSRF攻击。
       // none: 表示始终发送Cookie。必须配合secure属性使用。
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7天
+      maxAge: parseTimeToSeconds(this.refreshTokenExpiresIn) * 1000, // 7天 (单位:毫秒)
     });
   }
 
@@ -81,10 +94,10 @@ export class AuthService {
     };
 
     const access_token = await this.jwtService.signAsync(payload, {
-      expiresIn: '30m',
+      expiresIn: this.accessTokenExpiresIn,
     });
     const refresh_token = await this.jwtService.sign(payload, {
-      expiresIn: '7d',
+      expiresIn: this.refreshTokenExpiresIn,
     });
 
     // 存储refresh token到Redis白名单
@@ -132,11 +145,11 @@ export class AuthService {
       };
 
       const access_token = this.jwtService.sign(payload, {
-        expiresIn: '30m',
+        expiresIn: this.accessTokenExpiresIn,
       });
 
       const new_refresh_token = this.jwtService.sign(payload, {
-        expiresIn: '7d',
+        expiresIn: this.refreshTokenExpiresIn,
       });
 
       // 更新Redis中的refresh token
