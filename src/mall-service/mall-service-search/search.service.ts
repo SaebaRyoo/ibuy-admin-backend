@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { SkuService } from '../mall-service-goods/sku/sku.service';
 import { SearchResponse } from '@elastic/elasticsearch/lib/api/types';
 import { SkuEntity } from '../mall-service-goods/sku/sku.entity';
 import Result from '../../common/utils/Result';
+import { Cron } from '@nestjs/schedule';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 
 @Injectable()
 export class SearchService {
@@ -15,11 +17,170 @@ export class SearchService {
   private readonly ES_BRAND_AGR = 'brandNameAgr';
   private readonly ES_SPEC_MAP_AGR = 'specMapAgr';
   private readonly PAGE_SIZE = 30;
+  private readonly BATCH_SIZE = 1000; // 批量处理的大小
+  private readonly MAX_RETRIES = 3; // 最大重试次数
 
   constructor(
     private readonly elasticsearchService: ElasticsearchService,
-    private readonly skuService: SkuService, // 注入 AddressService
+    private readonly skuService: SkuService,
+    @Inject(WINSTON_MODULE_PROVIDER) private logger: Logger,
   ) {}
+
+  // 每天凌晨2点执行数据同步
+  @Cron('0 0 2 * * *')
+  async syncSkuData() {
+    this.logger.log('info', '开始同步SKU数据到Elasticsearch...');
+    try {
+      await this.importSku();
+      this.logger.log('info', 'SKU数据同步完成');
+    } catch (error) {
+      this.logger.error('SKU数据同步失败:', error);
+    }
+  }
+
+  /**
+   * 全量导入(优化前)
+   */
+  // async importSku(): Promise<void> {
+  //   // 从 sku 服务获取 SKU 列表
+  //   const result = await this.skuService.findAll();
+  //   const skuInfos = result.data;
+  //   // 构建 Bulk 请求  将每个 SKU 信息的索引操作和文档内容展平为一个单一的数组
+  //   const body = skuInfos.flatMap((skuInfo) => {
+  //     return [
+  //       { index: { _index: 'skuinfo', _id: skuInfo.id } }, // 创建索引操作
+  //       skuInfo, // 文档内容
+  //     ];
+  //   });
+
+  //   // 执行 Bulk 导入
+  //   if (body.length) {
+  //     await this.elasticsearchService.bulk({
+  //       operations: body,
+  //     });
+  //   }
+  // }
+
+  /**
+   * 分批导入SKU数据到Elasticsearch
+   */
+  async importSku(): Promise<void> {
+    try {
+      // 1. 检查索引是否存在，不存在则创建
+      const indexExists = await this.elasticsearchService.indices.exists({
+        index: this.ES_INDEX,
+      });
+
+      if (!indexExists) {
+        await this.createSkuIndex();
+      }
+
+      // 2. 获取所有SKU数据
+      const result = await this.skuService.findAll();
+      const skuInfos = result.data;
+
+      if (!skuInfos || skuInfos.length === 0) {
+        this.logger.log('info', '没有SKU数据需要同步');
+        return;
+      }
+
+      // 3. 分批处理数据
+      for (let i = 0; i < skuInfos.length; i += this.BATCH_SIZE) {
+        const batch = skuInfos.slice(i, i + this.BATCH_SIZE);
+        await this.processBatch(batch, 0);
+        this.logger.log(
+          'info',
+          `已处理 ${i + batch.length}/${skuInfos.length} 条数据`,
+        );
+      }
+    } catch (error) {
+      this.logger.error('导入SKU数据失败:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * 处理单个批次的数据，包含重试机制
+   */
+  private async processBatch(
+    batch: SkuEntity[],
+    retryCount: number,
+  ): Promise<void> {
+    try {
+      const operations = batch.flatMap((skuInfo) => [
+        { index: { _index: this.ES_INDEX, _id: skuInfo.id } },
+        skuInfo,
+      ]);
+
+      const { errors, items } = await this.elasticsearchService.bulk({
+        operations,
+        refresh: true,
+      });
+
+      if (errors) {
+        // 收集失败的项
+        const failedItems = items
+          .filter((item) => item.index?.error)
+          .map((item) => ({
+            id: item.index?._id,
+            error: item.index?.error,
+          }));
+
+        if (failedItems.length > 0) {
+          this.logger.error('部分数据导入失败:', failedItems);
+
+          // 如果还可以重试，则重试失败的项
+          if (retryCount < this.MAX_RETRIES) {
+            const failedSkus = batch.filter((sku) =>
+              failedItems.some((item) => item.id === sku.id.toString()),
+            );
+            await this.processBatch(failedSkus, retryCount + 1);
+          } else {
+            this.logger.error(
+              `达到最大重试次数(${this.MAX_RETRIES})，放弃重试`,
+            );
+          }
+        }
+      }
+    } catch (error) {
+      if (retryCount < this.MAX_RETRIES) {
+        this.logger.warn(`批处理失败，进行第${retryCount + 1}次重试`);
+        await new Promise((resolve) =>
+          setTimeout(resolve, 1000 * (retryCount + 1)),
+        ); // 指数退避
+        await this.processBatch(batch, retryCount + 1);
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  /**
+   * 创建SKU索引及其映射
+   */
+  private async createSkuIndex(): Promise<void> {
+    try {
+      await this.elasticsearchService.indices.create({
+        index: this.ES_INDEX,
+        body: {
+          mappings: {
+            properties: {
+              name: { type: 'text', analyzer: 'ik_max_word' },
+              price: { type: 'double' },
+              categoryName: { type: 'keyword' },
+              brandName: { type: 'keyword' },
+              spec: { type: 'keyword' },
+              // 可以根据需要添加更多字段映射
+            },
+          },
+        },
+      });
+      this.logger.log('info', `创建索引 ${this.ES_INDEX} 成功`);
+    } catch (error) {
+      this.logger.error('创建索引失败:', error);
+      throw error;
+    }
+  }
 
   // 关键词搜索
   async search(searchMap: Record<string, string>) {
@@ -250,25 +411,5 @@ export class SearchService {
       });
     });
     return specMap;
-  }
-
-  async importSku(): Promise<void> {
-    // 从 sku 服务获取 SKU 列表
-    const result = await this.skuService.findAll();
-    const skuInfos = result.data;
-    // 构建 Bulk 请求  将每个 SKU 信息的索引操作和文档内容展平为一个单一的数组
-    const body = skuInfos.flatMap((skuInfo) => {
-      return [
-        { index: { _index: 'skuinfo', _id: skuInfo.id } }, // 创建索引操作
-        skuInfo, // 文档内容
-      ];
-    });
-
-    // 执行 Bulk 导入
-    if (body.length) {
-      await this.elasticsearchService.bulk({
-        operations: body,
-      });
-    }
   }
 }

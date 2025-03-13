@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as winston from 'winston';
 import { WinstonModule } from 'nest-winston';
 import 'winston-daily-rotate-file';
+import { ScheduleModule } from '@nestjs/schedule';
 
 import { AuthGuard } from './common/guards/auth.guard';
 import { PermissionGuard } from './common/guards/permission.guard';
@@ -41,7 +42,7 @@ import { MenuModule } from './mall-service/mall-service-system/menu/menu.module'
         process.env.NODE_ENV === 'development' ? ['.env.dev'] : ['.env'],
       isGlobal: true, // You will not need to import ConfigModule in other modules once it's been loaded in the root module
     }),
-
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
