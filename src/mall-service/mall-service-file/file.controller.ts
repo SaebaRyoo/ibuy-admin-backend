@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileService } from './file.service';
+import { FileUploadDto, FileDownloadDto, FileDeleteDto } from './dto/file.dto';
 
 @Controller('file')
 export class FileController {
@@ -17,12 +18,12 @@ export class FileController {
 
   @Post('/upload')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: any, @Query('path') path: string) {
+  async uploadFile(@UploadedFile() file: any, @Query() query: FileUploadDto) {
     return await this.fileService.uploadFile(
       'mall',
       file.originalname,
       file.buffer,
-      path,
+      query.path,
     );
   }
 
@@ -38,7 +39,7 @@ export class FileController {
   // }
 
   @Get('/download')
-  readFileStream(@Query() query: any) {
+  readFileStream(@Query() query: FileDownloadDto) {
     return this.fileService.readFileStream(
       query.bucketName,
       query.objectName,
@@ -47,7 +48,7 @@ export class FileController {
   }
 
   @Delete('/delete')
-  deleteFile(@Query() query: any) {
+  deleteFile(@Query() query: FileDeleteDto) {
     return this.fileService.deleteFile(
       query.bucketName,
       query.objectName,

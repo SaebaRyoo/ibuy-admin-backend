@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { TemplateService } from './template.service';
 import { TemplateEntity } from './template.entity';
-import { AddressEntity } from '../../mall-service-member/address/address.entity';
 
 @Controller('template')
 export class TemplateController {
@@ -50,5 +49,10 @@ export class TemplateController {
   @Get()
   async findAll() {
     return this.templateService.findAll();
+  }
+
+  @Get('/:id/paraAndSpec')
+  async findParaAndSpecById(@Param('id') id: number) {
+    return this.templateService.findParaAndSpecById(id);
   }
 }

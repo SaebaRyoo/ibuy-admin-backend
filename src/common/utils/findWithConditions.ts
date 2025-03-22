@@ -46,7 +46,7 @@ export default async function findWithConditions<T>(
     const snakeKey = camelToSnake(key);
 
     // 过滤掉空值
-    if (value !== undefined && value !== null) {
+    if (value !== undefined && value !== null && value !== '') {
       // 模糊匹配
       // qb.andWhere(`${snakeKey} LIKE :value`, { value: `%${value}%` });
       const columnType = typeof value;

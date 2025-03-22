@@ -22,9 +22,10 @@ export class OrderController {
   async findList(
     @Param('current') current: number,
     @Param('pageSize') pageSize: number,
+    @Query('orderStatus') orderStatus: string,
     @Body() order: OrderEntity,
   ) {
-    return this.orderService.findList({ current, pageSize }, order);
+    return this.orderService.findList({ current, pageSize, orderStatus }, order);
   }
   @Get('/:id')
   async getSpecById(@Param('id') id: string) {
